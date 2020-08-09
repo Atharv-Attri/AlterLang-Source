@@ -9,24 +9,39 @@ import rich
 # TODO: ?: While loop: TODO
 # TODO: ?: For Loop
 
+# TODO: add reserved
+reserved = {
+    'say': "SAY",
+
+}
 
 tokens = [
     'SAY',
     'QUOTE',
     'SPACE',
-    'TEXT'
+    'TEXT',
+    'EQUAL',
 ]
 
-t_SAY = "say"
+meta = [
+
+]
+
+variables = [
+
+]
+
+t_SAY = "say" #! change to reserved
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_TEXT = r"\".+_ ?\""
+t_EQUAL = r".+\=.+"
 
 def t_error(t):
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
     t.lexer.skip(1)
 
-t_ignore = '\t'
+t_ignore = '\n'
 
 lexer = lex.lex()
 
@@ -42,7 +57,15 @@ def p_say_onlyText(t):
             to_print = str(i).rstrip('"')
             to_print = to_print.lstrip('"')
             print(to_print)
+    
 
+def p_set(t):
+    '''
+    set : SET EQUAL
+        | EQUAL
+    '''
+    print(f"{t.value!r}")
+    
 
 
 def p_error(t):
@@ -51,9 +74,10 @@ def p_error(t):
     print(f"Syntax Error: {t.value!r}")
 
 
-parser = yacc.yacc(debug=False, write_tables=False)
+parser = yacc.yacc()
 
 if __name__ == "__main__":
+    rich.print("[yellow]Hello From The NAME Community[/yellow]")
     try:
         with open(sys.argv[1], "r") as file:
             raw = file.readlines()

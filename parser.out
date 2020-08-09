@@ -1,0 +1,86 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> say
+Rule 1     say -> SAY QUOTE TEXT QUOTE
+Rule 2     say -> SAY SPACE TEXT
+Rule 3     set -> SET EQUAL
+Rule 4     set -> EQUAL
+
+Terminals, with rules where they appear
+
+EQUAL                : 3 4
+QUOTE                : 1 1
+SAY                  : 1 2
+SET                  : 3
+SPACE                : 2
+TEXT                 : 1 2
+error                : 
+
+Nonterminals, with rules where they appear
+
+say                  : 0
+set                  : 
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . say
+    (1) say -> . SAY QUOTE TEXT QUOTE
+    (2) say -> . SAY SPACE TEXT
+
+    SAY             shift and go to state 2
+
+    say                            shift and go to state 1
+
+state 1
+
+    (0) S' -> say .
+
+
+
+state 2
+
+    (1) say -> SAY . QUOTE TEXT QUOTE
+    (2) say -> SAY . SPACE TEXT
+
+    QUOTE           shift and go to state 3
+    SPACE           shift and go to state 4
+
+
+state 3
+
+    (1) say -> SAY QUOTE . TEXT QUOTE
+
+    TEXT            shift and go to state 5
+
+
+state 4
+
+    (2) say -> SAY SPACE . TEXT
+
+    TEXT            shift and go to state 6
+
+
+state 5
+
+    (1) say -> SAY QUOTE TEXT . QUOTE
+
+    QUOTE           shift and go to state 7
+
+
+state 6
+
+    (2) say -> SAY SPACE TEXT .
+
+    $end            reduce using rule 2 (say -> SAY SPACE TEXT .)
+
+
+state 7
+
+    (1) say -> SAY QUOTE TEXT QUOTE .
+
+    $end            reduce using rule 1 (say -> SAY QUOTE TEXT QUOTE .)
+
