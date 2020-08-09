@@ -1,5 +1,14 @@
 from ply import lex, yacc
 
+# TODO: Variable, While loop, For loop, math
+# !Due:    12   ,     14    ,    14   ,  12
+
+# ?: Variable: regular syntax: a = 2, a = "say", a = true. ENG syntax: set a to 2
+# ?: Math: regular syntax: 1+1 = 2, a += 1. ENG syntax: add 1 to a, add a to b
+# TODO: ?: While loop: TODO
+# TODO: ?: For Loop
+
+
 tokens = [
     'SAY',
     'QUOTE',
