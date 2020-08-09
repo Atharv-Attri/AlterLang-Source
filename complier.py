@@ -1,5 +1,6 @@
+import sys
 from ply import lex, yacc
-
+import rich
 # TODO: Variable, While loop, For loop, math
 # !Due:    12   ,     14    ,    14   ,  12
 
@@ -22,7 +23,7 @@ t_SPACE = r"\s"
 t_TEXT = r"\".+_ ?\""
 
 def t_error(t):
-    print(f"Illegal character {t.value[0]!r} on line {t.lexer.lineno}")
+    rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
     t.lexer.skip(1)
 
 t_ignore = '\t'
@@ -53,7 +54,16 @@ def p_error(t):
 parser = yacc.yacc(debug=False, write_tables=False)
 
 if __name__ == "__main__":
-    with open("test.kinos", "r") as file:
-        raw = file.readlines()
-        for i in raw:
-            parser.parse(i)
+    try:
+        with open(sys.argv[1], "r") as file:
+            raw = file.readlines()
+            for i in raw:
+                parser.parse(i)
+    except IndexError:
+        rich.print("[bold red]No File Specifed[/bold red]")
+        rich.print("[bold blue]Program exited with code 5[/bold blue]")
+        exit(5)
+    except FileNotFoundError:
+        rich.print("[bold red]File Not Found[/bold red]")
+        rich.print("[bold blue]Program exited with code 5[/bold blue]")
+        exit(5)
