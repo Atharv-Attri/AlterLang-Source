@@ -10,7 +10,7 @@ tokens = [
 t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
-t_TEXT = r"\"\w+\""
+t_TEXT = r"\".+_ ?\""
 
 def t_error(t):
     print(f"Illegal character {t.value[0]!r} on line {t.lexer.lineno}")
