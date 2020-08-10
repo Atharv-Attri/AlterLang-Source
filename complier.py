@@ -24,7 +24,9 @@ tokens = [
     'QTEXT',
     'TEXT',
     'ADD',
+    'MULTIPLY',
     'NUMBER'
+    
 ] + list(reserved.values())
 
 meta = [
@@ -34,6 +36,7 @@ meta = [
 variables = [
 
 ]
+t_MULTIPLY = r"\*"
 t_ADD = r"\+"
 t_NUMBER = r"\d+"
 t_SAY = "say"
@@ -51,6 +54,7 @@ t_ignore = '\n'
 
 lexer = lex.lex()
 
+def p_math_multiply(t):
 def p_math_add(t):
     """
     math : NUMBER PLUS NUMBER
