@@ -22,11 +22,7 @@ tokens = [
     'TEXT',
     'EQUAL',
     'QTEXT',
-    'TEXT',
-    'ADD',
-    'MULTIPLY',
-    'NUMBER'
-    
+    'TEXT'
 ] + list(reserved.values())
 
 meta = [
@@ -36,9 +32,6 @@ meta = [
 variables = [
 
 ]
-t_MULTIPLY = r"\*"
-t_ADD = r"\+"
-t_NUMBER = r"\d+"
 t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
@@ -54,14 +47,6 @@ t_ignore = '\n'
 
 lexer = lex.lex()
 
-def p_math_multiply(t):
-def p_math_add(t):
-    """
-    math : NUMBER PLUS NUMBER
-    """
-    for i in t:
-        print(i)
-
 def p_say_onlyText(t):
     """
     say : SAY QUOTE QTEXT QUOTE
@@ -73,7 +58,6 @@ def p_say_onlyText(t):
         if str(i).startswith('"'):
             to_print = str(i).strip('"')
             print(to_print)
-
 
 def p_error(t):
     if t is None:  # lexer error
@@ -98,3 +82,4 @@ if __name__ == "__main__":
         rich.print("[bold red]File Not Found[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
         exit(5)
+ 
