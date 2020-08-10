@@ -22,7 +22,9 @@ tokens = [
     'TEXT',
     'EQUAL',
     'QTEXT',
-    'TEXT'
+    'TEXT',
+    'ADD',
+    'NUMBER'
 ] + list(reserved.values())
 
 meta = [
@@ -32,6 +34,8 @@ meta = [
 variables = [
 
 ]
+t_ADD = r"\+"
+t_NUMBER = r"\d+"
 t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
@@ -47,6 +51,13 @@ t_ignore = '\n'
 
 lexer = lex.lex()
 
+def p_math_add(t):
+    """
+    math : NUMBER PLUS NUMBER
+    """
+    for i in t:
+        print(i)
+
 def p_say_onlyText(t):
     """
     say : SAY QUOTE QTEXT QUOTE
@@ -59,12 +70,6 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
-def p_statement(t):
-    '''statement : TEXT EQUALS TEXT
-                 | TEXT EQUALS TEXT
-    '''
-    for i in t:
-        print(i)
 
 def p_error(t):
     if t is None:  # lexer error
@@ -89,42 +94,3 @@ if __name__ == "__main__":
         rich.print("[bold red]File Not Found[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
         exit(5)
- tokens = (
-    'NUMBER',
-    'PLUS',
-    'MINUS',
-    'TIMES',
-    'DIVIDE',
-    'LPAREN',
-    'RPAREN',
- )
- 
- # Regular expression rules for simple tokens
- t_PLUS    = r'\+'
- t_MINUS   = r'-'
- t_TIMES   = r'\*'
- t_DIVIDE  = r'/'
- t_LPAREN  = r'\('
- t_RPAREN  = r'\)'
- 
- # A regular expression rule with some action code
- def t_NUMBER(t):
-     r'\d+'
-     t.value = int(t.value)    
-     return t
- 
- # Define a rule so we can track line numbers
- def t_newline(t):
-     r'\n+'
-     t.lexer.lineno += len(t.value)
- 
- # A string containing ignored characters (spaces and tabs)
- t_ignore  = ' \t'
- 
- # Error handling rule
- def t_error(t):
-     print("Illegal character '%s'" % t.value[0])
-     t.lexer.skip(1)
- 
- # Build the lexer
- lexer = lex.lex()

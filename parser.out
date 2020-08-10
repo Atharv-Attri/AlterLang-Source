@@ -2,30 +2,32 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    ADD
     EQUAL
+    TEXT
 
 Grammar
 
-Rule 0     S' -> say
-Rule 1     say -> SAY QUOTE QTEXT QUOTE
-Rule 2     say -> SAY SPACE QTEXT
-Rule 3     statement -> NAME EQUALS TEXT
-Rule 4     statement -> TEXT EQUALS NAME
+Rule 0     S' -> math
+Rule 1     math -> NUMBER PLUS NUMBER
+Rule 2     say -> SAY QUOTE QTEXT QUOTE
+Rule 3     say -> SAY SPACE QTEXT
 
 Terminals, with rules where they appear
 
+ADD                  : 
 EQUAL                : 
-NAME                 : 3 4
-QTEXT                : 1 2
-QUOTE                : 1 1
-SAY                  : 1 2
-SPACE                : 2
-TEXT                 : 3 4
+NUMBER               : 1 1
+QTEXT                : 2 3
+QUOTE                : 2 2
+SAY                  : 2 3
+SPACE                : 3
+TEXT                 : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-EQUALS               : 3 4
-say                  : 0
-statement            : 
+PLUS                 : 1
+math                 : 0
+say                  : 
 
