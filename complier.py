@@ -1,6 +1,7 @@
 import sys
 from ply import lex, yacc
 import rich
+
 # TODO: Variable, While loop, For loop, math
 # !Due:    12   ,     14    ,    14   ,  12
 
@@ -11,31 +12,30 @@ import rich
 
 # TODO: add reserved
 reserved = {
-    'say': "SAY",
+    'say' : "SAY",
 
 }
 
 tokens = [
-    'SAY',
     'QUOTE',
     'SPACE',
     'TEXT',
     'EQUAL',
-]
+] + list(reserved.values())
 
 meta = [
 
 ]
-
+ 
 variables = [
 
 ]
-
-t_SAY = "say" #! change to reserved
+t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
-t_TEXT = r"\".+_ ?\""
-t_EQUAL = r".+\=.+"
+t_QTEXT = r"\".+_ ?\""
+t_ANTEXT = r"\w"
+t_EQUAL = "="
 
 def t_error(t):
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
@@ -47,8 +47,8 @@ lexer = lex.lex()
 
 def p_say_onlyText(t):
     """
-    say : SAY QUOTE TEXT QUOTE
-        | SAY SPACE TEXT 
+    say : SAY QUOTE QTEXT QUOTE
+        | SAY SPACE QTEXT 
     """
     l = len(t)
     start = False
@@ -59,14 +59,10 @@ def p_say_onlyText(t):
             print(to_print)
     
 
-def p_set(t):
+def p_setvar(t):
     '''
-    set : SET EQUAL
-        | EQUAL
+    setvar: 
     '''
-    print(f"{t.value!r}")
-    
-
 
 def p_error(t):
     if t is None:  # lexer error

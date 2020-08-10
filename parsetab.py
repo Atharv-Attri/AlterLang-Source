@@ -6,7 +6,7 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'EQUAL QUOTE SAY SET SPACE TEXT\n    say : SAY QUOTE TEXT QUOTE\n        | SAY SPACE TEXT \n    \n    set : SET EQUAL\n        | EQUAL\n    '
+_lr_signature = 'EQUAL QUOTE SAY SPACE TEXT\n    say : SAY QUOTE TEXT QUOTE\n        | SAY SPACE TEXT \n    '
     
 _lr_action_items = {'SAY':([0,],[2,]),'$end':([1,6,7,],[0,-2,-1,]),'QUOTE':([2,5,],[3,7,]),'SPACE':([2,],[4,]),'TEXT':([3,4,],[5,6,]),}
 
@@ -27,8 +27,6 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> say","S'",1,None,None,None),
-  ('say -> SAY QUOTE TEXT QUOTE','say',4,'p_say_onlyText','complier.py',47),
-  ('say -> SAY SPACE TEXT','say',3,'p_say_onlyText','complier.py',48),
-  ('set -> SET EQUAL','set',2,'p_set','complier.py',61),
-  ('set -> EQUAL','set',1,'p_set','complier.py',62),
+  ('say -> SAY QUOTE TEXT QUOTE','say',4,'p_say_onlyText','complier.py',49),
+  ('say -> SAY SPACE TEXT','say',3,'p_say_onlyText','complier.py',50),
 ]
