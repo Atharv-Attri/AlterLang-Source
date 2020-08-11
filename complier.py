@@ -19,10 +19,8 @@ reserved = {
 tokens = [
     'QUOTE',
     'SPACE',
-    'TEXT',
     'EQUAL',
     'QTEXT',
-    'TEXT'
 ] + list(reserved.values())
 
 meta = [
@@ -36,8 +34,7 @@ t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
-t_EQUAL = "="
-t_TEXT  = r"\w+"
+t_EQUAL = r"="
 
 def t_error(t):
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
@@ -54,10 +51,17 @@ def p_say_onlyText(t):
     """
     l = len(t)
     start = False
-    for x, i in enumerate(t):
+    for i in (t):
         if str(i).startswith('"'):
             to_print = str(i).strip('"')
             print(to_print)
+
+def p_vars(t): 
+    """
+    vars : EQUAL
+    """
+    for i in t:
+        print(i)
 
 def p_error(t):
     if t is None:  # lexer error
