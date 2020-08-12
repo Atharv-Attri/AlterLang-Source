@@ -17,6 +17,7 @@ reserved = {
 }
 
 tokens = [
+    'Divide',
     'NUMBER',
     'MULTIPLY',
     'QUOTE',
@@ -33,7 +34,7 @@ variables = {
 
 }
 
-
+t_DIVIDE = r""
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_QUOTE = r"\"" 
@@ -49,6 +50,29 @@ t_ignore = '\n'
 
 lexer = lex.lex()
 
+def p_divide(t):
+    """
+    divide : DIVIDE
+    """
+    try:
+        tmp = str(t).split("*")
+        for i in tmp:
+            int(i)
+        t.value = NUM
+        return t.value
+    except ValueError:
+        try:
+            if "true" in t:
+                print("1")
+            if "false" in t:
+                print("2")
+            else:
+                print("0")
+        try: 
+            if 
+        except:
+            pass
+
 def p_multiply(t):
     """
     multiply : MULTIPLY
@@ -61,8 +85,14 @@ def p_multiply(t):
         return t.value
     except ValueError:
         try:
-            if "h" in "hello":
-                print("hi")
+            if "true" in t:
+                print("1")
+            if "false" in t:
+                print("2")
+            else:
+                print("0")
+        try: 
+            if 
         except:
             pass
 
