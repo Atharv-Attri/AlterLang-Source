@@ -2,53 +2,69 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    Divide
     NUMBER
 
 Grammar
 
-Rule 0     S' -> multiply
-Rule 1     multiply -> MULTIPLY
-Rule 2     say -> SAY QUOTE QTEXT QUOTE
-Rule 3     say -> SAY SPACE QTEXT
-Rule 4     vars -> EQUAL
+Rule 0     S' -> vars
+Rule 1     vars -> EQUAL
+Rule 2     vars -> VARIABLES
+Rule 3     divide -> DIVIDE
+Rule 4     multiply -> MULTIPLY
+Rule 5     say -> SAY QUOTE QTEXT QUOTE
+Rule 6     say -> SAY SPACE QTEXT
 
 Terminals, with rules where they appear
 
-EQUAL                : 4
-MULTIPLY             : 1
+DIVIDE               : 3
+Divide               : 
+EQUAL                : 1
+MULTIPLY             : 4
 NUMBER               : 
-QTEXT                : 2 3
-QUOTE                : 2 2
-SAY                  : 2 3
-SPACE                : 3
+QTEXT                : 5 6
+QUOTE                : 5 5
+SAY                  : 5 6
+SPACE                : 6
+VARIABLES            : 2
 error                : 
 
 Nonterminals, with rules where they appear
 
-multiply             : 0
+divide               : 
+multiply             : 
 say                  : 
-vars                 : 
+vars                 : 0
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . multiply
-    (1) multiply -> . MULTIPLY
+    (0) S' -> . vars
+    (1) vars -> . EQUAL
+    (2) vars -> . VARIABLES
 
-    MULTIPLY        shift and go to state 2
+    EQUAL           shift and go to state 2
+    VARIABLES       shift and go to state 3
 
-    multiply                       shift and go to state 1
+    vars                           shift and go to state 1
 
 state 1
 
-    (0) S' -> multiply .
+    (0) S' -> vars .
 
 
 
 state 2
 
-    (1) multiply -> MULTIPLY .
+    (1) vars -> EQUAL .
 
-    $end            reduce using rule 1 (multiply -> MULTIPLY .)
+    $end            reduce using rule 1 (vars -> EQUAL .)
+
+
+state 3
+
+    (2) vars -> VARIABLES .
+
+    $end            reduce using rule 2 (vars -> VARIABLES .)
 
