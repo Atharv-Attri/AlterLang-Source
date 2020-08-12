@@ -2,7 +2,7 @@ import sys
 from ply import lex, yacc
 import rich
 import math
-# TODO: Variable, While loop, For loop, math
+# TODO: Variable, While loop, For loop, math, conversion
 # !Due:    12   ,     14    ,    14   ,  12
 
 # ?: Variable: regular syntax: a = 2, a = "say", a = true. ENG syntax: set a to 2
@@ -37,14 +37,14 @@ variables = {
 
 }
 
-t_DIVIDE = r"\w_ ?\\\w_?"
+t_DIVIDE = r"[A-Za-z0-9]+/[A-Za-z0-9]+"
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r"\w+_ ?=\w+_ ?"
-t_VARIABLES = r"\w"
+t_VARIABLES = r"\w+"
 
 def t_error(t):
     global ERROR
@@ -61,23 +61,14 @@ def p_divide(t):
     divide : DIVIDE
     """
     try:
-        tmp = str(t).split("/")
+        tmp = t[1].split("/")
         for x, i in enumerate(tmp):
             tmp[x] = float(i)
-        t.value = tmp[1] / tmp[2]
-        print(tmp[1] / tmp[2])
+        t.value = tmp[0] / tmp[1]
+        print(tmp[0] / tmp[1])
         return t.value
     except ValueError:
-        try:
-            if "true" in t:
-                print("1")
-            if "false" in t:
-                print("2")
-            else:
-                print("0")
-
-        except:
-            pass
+        rich.print("[bold red]Multiplying a non number[/bold red]\n[bold blue]Error Ignored, this may cause your program to malfunction, please fix[/bold blue]")
 
 def p_vars_set(t):
     """

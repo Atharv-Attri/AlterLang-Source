@@ -7,64 +7,55 @@ Unused terminals:
 
 Grammar
 
-Rule 0     S' -> vars
-Rule 1     vars -> EQUAL
-Rule 2     vars -> VARIABLES
-Rule 3     divide -> DIVIDE
+Rule 0     S' -> divide
+Rule 1     divide -> DIVIDE
+Rule 2     vars -> EQUAL
+Rule 3     vars -> VARIABLES
 Rule 4     multiply -> MULTIPLY
 Rule 5     say -> SAY QUOTE QTEXT QUOTE
 Rule 6     say -> SAY SPACE QTEXT
 
 Terminals, with rules where they appear
 
-DIVIDE               : 3
+DIVIDE               : 1
 Divide               : 
-EQUAL                : 1
+EQUAL                : 2
 MULTIPLY             : 4
 NUMBER               : 
 QTEXT                : 5 6
 QUOTE                : 5 5
 SAY                  : 5 6
 SPACE                : 6
-VARIABLES            : 2
+VARIABLES            : 3
 error                : 
 
 Nonterminals, with rules where they appear
 
-divide               : 
+divide               : 0
 multiply             : 
 say                  : 
-vars                 : 0
+vars                 : 
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . vars
-    (1) vars -> . EQUAL
-    (2) vars -> . VARIABLES
+    (0) S' -> . divide
+    (1) divide -> . DIVIDE
 
-    EQUAL           shift and go to state 2
-    VARIABLES       shift and go to state 3
+    DIVIDE          shift and go to state 2
 
-    vars                           shift and go to state 1
+    divide                         shift and go to state 1
 
 state 1
 
-    (0) S' -> vars .
+    (0) S' -> divide .
 
 
 
 state 2
 
-    (1) vars -> EQUAL .
+    (1) divide -> DIVIDE .
 
-    $end            reduce using rule 1 (vars -> EQUAL .)
-
-
-state 3
-
-    (2) vars -> VARIABLES .
-
-    $end            reduce using rule 2 (vars -> VARIABLES .)
+    $end            reduce using rule 1 (divide -> DIVIDE .)
 

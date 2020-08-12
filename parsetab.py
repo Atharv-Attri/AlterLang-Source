@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'DIVIDE Divide EQUAL MULTIPLY NUMBER QTEXT QUOTE SAY SPACE VARIABLES\n    vars : EQUAL\n    \n    vars : VARIABLES\n    \n    divide : DIVIDE\n    \n    multiply : MULTIPLY\n    \n    say : SAY QUOTE QTEXT QUOTE\n        | SAY SPACE QTEXT \n    '
+_lr_signature = 'DIVIDE Divide EQUAL MULTIPLY NUMBER QTEXT QUOTE SAY SPACE VARIABLES\n    divide : DIVIDE\n    \n    vars : EQUAL\n    \n    vars : VARIABLES\n    \n    multiply : MULTIPLY\n    \n    say : SAY QUOTE QTEXT QUOTE\n        | SAY SPACE QTEXT \n    '
     
-_lr_action_items = {'EQUAL':([0,],[2,]),'VARIABLES':([0,],[3,]),'$end':([1,2,3,],[0,-1,-2,]),}
+_lr_action_items = {'DIVIDE':([0,],[2,]),'$end':([1,2,],[0,-1,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'vars':([0,],[1,]),}
+_lr_goto_items = {'divide':([0,],[1,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,11 +26,11 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> vars","S'",1,None,None,None),
-  ('vars -> EQUAL','vars',1,'p_vars_set','complier.py',58),
-  ('vars -> VARIABLES','vars',1,'p_vars_get','complier.py',69),
-  ('divide -> DIVIDE','divide',1,'p_divide','complier.py',76),
-  ('multiply -> MULTIPLY','multiply',1,'p_multiply','complier.py',98),
-  ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',119),
-  ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',120),
+  ("S' -> divide","S'",1,None,None,None),
+  ('divide -> DIVIDE','divide',1,'p_divide','complier.py',61),
+  ('vars -> EQUAL','vars',1,'p_vars_set','complier.py',84),
+  ('vars -> VARIABLES','vars',1,'p_vars_get','complier.py',95),
+  ('multiply -> MULTIPLY','multiply',1,'p_multiply','complier.py',106),
+  ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',127),
+  ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',128),
 ]
