@@ -33,7 +33,7 @@ variables = {
 
 }
 
-]
+
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_QUOTE = r"\"" 
@@ -50,7 +50,22 @@ t_ignore = '\n'
 lexer = lex.lex()
 
 def p_multiply(t):
-    pass
+    """
+    multiply : MULTIPLY
+    """
+    try:
+        tmp = str(t).split("*")
+        for i in tmp:
+            int(i)
+        t.value = NUM
+        return t.value
+    except ValueError:
+        try:
+            if "h" in "hello":
+                print("hi")
+        except:
+            pass
+
 def p_say_onlyText(t):
     """
     say : SAY QUOTE QTEXT QUOTE

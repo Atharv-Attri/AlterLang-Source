@@ -1,84 +1,54 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    NUMBER
+
 Grammar
 
-Rule 0     S' -> say
-Rule 1     say -> SAY QUOTE QTEXT QUOTE
-Rule 2     say -> SAY SPACE QTEXT
-Rule 3     vars -> EQUAL
+Rule 0     S' -> multiply
+Rule 1     multiply -> MULTIPLY
+Rule 2     say -> SAY QUOTE QTEXT QUOTE
+Rule 3     say -> SAY SPACE QTEXT
+Rule 4     vars -> EQUAL
 
 Terminals, with rules where they appear
 
-EQUAL                : 3
-QTEXT                : 1 2
-QUOTE                : 1 1
-SAY                  : 1 2
-SPACE                : 2
+EQUAL                : 4
+MULTIPLY             : 1
+NUMBER               : 
+QTEXT                : 2 3
+QUOTE                : 2 2
+SAY                  : 2 3
+SPACE                : 3
 error                : 
 
 Nonterminals, with rules where they appear
 
-say                  : 0
+multiply             : 0
+say                  : 
 vars                 : 
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . say
-    (1) say -> . SAY QUOTE QTEXT QUOTE
-    (2) say -> . SAY SPACE QTEXT
+    (0) S' -> . multiply
+    (1) multiply -> . MULTIPLY
 
-    SAY             shift and go to state 2
+    MULTIPLY        shift and go to state 2
 
-    say                            shift and go to state 1
+    multiply                       shift and go to state 1
 
 state 1
 
-    (0) S' -> say .
+    (0) S' -> multiply .
 
 
 
 state 2
 
-    (1) say -> SAY . QUOTE QTEXT QUOTE
-    (2) say -> SAY . SPACE QTEXT
+    (1) multiply -> MULTIPLY .
 
-    QUOTE           shift and go to state 3
-    SPACE           shift and go to state 4
-
-
-state 3
-
-    (1) say -> SAY QUOTE . QTEXT QUOTE
-
-    QTEXT           shift and go to state 5
-
-
-state 4
-
-    (2) say -> SAY SPACE . QTEXT
-
-    QTEXT           shift and go to state 6
-
-
-state 5
-
-    (1) say -> SAY QUOTE QTEXT . QUOTE
-
-    QUOTE           shift and go to state 7
-
-
-state 6
-
-    (2) say -> SAY SPACE QTEXT .
-
-    $end            reduce using rule 2 (say -> SAY SPACE QTEXT .)
-
-
-state 7
-
-    (1) say -> SAY QUOTE QTEXT QUOTE .
-
-    $end            reduce using rule 1 (say -> SAY QUOTE QTEXT QUOTE .)
+    $end            reduce using rule 1 (multiply -> MULTIPLY .)
 

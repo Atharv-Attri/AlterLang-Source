@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'EQUAL QTEXT QUOTE SAY SPACE\n    say : SAY QUOTE QTEXT QUOTE\n        | SAY SPACE QTEXT \n    \n    vars : EQUAL\n    '
+_lr_signature = 'EQUAL MULTIPLY NUMBER QTEXT QUOTE SAY SPACE\n    multiply : MULTIPLY\n    \n    say : SAY QUOTE QTEXT QUOTE\n        | SAY SPACE QTEXT \n    \n    vars : EQUAL\n    '
     
-_lr_action_items = {'SAY':([0,],[2,]),'$end':([1,6,7,],[0,-2,-1,]),'QUOTE':([2,5,],[3,7,]),'SPACE':([2,],[4,]),'QTEXT':([3,4,],[5,6,]),}
+_lr_action_items = {'MULTIPLY':([0,],[2,]),'$end':([1,2,],[0,-1,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'say':([0,],[1,]),}
+_lr_goto_items = {'multiply':([0,],[1,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,8 +26,9 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> say","S'",1,None,None,None),
-  ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',51),
-  ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',52),
-  ('vars -> EQUAL','vars',1,'p_vars_set','complier.py',63),
+  ("S' -> multiply","S'",1,None,None,None),
+  ('multiply -> MULTIPLY','multiply',1,'p_multiply','complier.py',54),
+  ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',60),
+  ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',61),
+  ('vars -> EQUAL','vars',1,'p_vars_set','complier.py',72),
 ]
