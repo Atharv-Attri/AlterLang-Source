@@ -11,6 +11,7 @@ import math
 # TODO: ?: For Loop
 
 # TODO: add reserved
+ERROR = False
 reserved = {
     'say' : "SAY",
 
@@ -24,7 +25,8 @@ tokens = [
     'SPACE',
     'EQUAL',
     'QTEXT',
-    'VARIABLES'
+    'VARIABLES',
+    'DIVIDE'
 ] + list(reserved.values())
 
 meta = [
@@ -35,7 +37,7 @@ variables = {
 
 }
 
-t_DIVIDE = r""
+t_DIVIDE = r"\fasdhgaskjghkjgh"
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_QUOTE = r"\"" 
@@ -45,8 +47,10 @@ t_EQUAL = r"\w+_ ?=\w+_ ?"
 t_VARIABLES = r"\w"
 
 def t_error(t):
+    global ERROR
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
     t.lexer.skip(1)
+    ERROR = True
 
 t_ignore = '\n'
 
@@ -57,10 +61,11 @@ def p_divide(t):
     divide : DIVIDE
     """
     try:
-        tmp = str(t).split("*")
-        for i in tmp:
-            int(i)
-        t.value = NUM
+        tmp = str(t).split("/")
+        for x, i in enumerate(tmp):
+            tmp[x] = float(i)
+        t.value = tmp[1] / tmp[2]
+        print(tmp[1] / tmp[2])
         return t.value
     except ValueError:
         try:
@@ -70,10 +75,31 @@ def p_divide(t):
                 print("2")
             else:
                 print("0")
-        try: 
-            if 
+
         except:
             pass
+
+def p_vars_set(t):
+    """
+    vars : EQUAL
+    """
+    name = ""
+    value = ""
+    stripped = str(t[1]).split("=")
+    name = stripped[0]
+    value = stripped[1]
+    variables[name] = value
+
+def p_vars_get(t):
+    """
+    vars : VARIABLES
+    """
+    tmp = t[1]
+    for i in t:
+        print(i)
+    t.value = variables[str(tmp)]
+    return t.value
+
 
 def p_multiply(t):
     """
@@ -83,7 +109,7 @@ def p_multiply(t):
         tmp = str(t).split("*")
         for i in tmp:
             int(i)
-        t.value = NUM
+        #t.value = NUM
         return t.value
     except ValueError:
         try:
@@ -93,8 +119,6 @@ def p_multiply(t):
                 print("2")
             else:
                 print("0")
-        try: 
-            if 
         except:
             pass
 
@@ -110,18 +134,10 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
-def p_vars_set(t):
-    """
-    vars : EQUAL
-    """
-    name = ""
-    value = ""
-    stripped = str(t[1]).split("=")
-    name = stripped[0]
-    value = stripped[1]
-    variables[name] = value
 
 def p_error(t):
+    global ERROR
+    ERROR = True
     if t is None:  # lexer error
         return
     print(f"Syntax Error: {t.value!r}")
@@ -144,5 +160,9 @@ if __name__ == "__main__":
         rich.print("[bold red]File Not Found[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
         exit(5)
-    rich.print("[bold green]No Errors![/bold green]")
-    rich.print("[bold blue]Program exited with code 0[/bold blue]")
+    if ERROR == True:
+        rich.print("[bold red]Errors![/bold red]")
+        rich.print("[bold blue]Program exited with code 1[/bold blue]")
+    else:
+        rich.print("[bold green]No Errors![/bold green]")
+        rich.print("[bold blue]Program exited with code 0[/bold blue]")
