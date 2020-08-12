@@ -1,7 +1,7 @@
 import sys
 from ply import lex, yacc
 import rich
-
+import math
 # TODO: Variable, While loop, For loop, math
 # !Due:    12   ,     14    ,    14   ,  12
 
@@ -17,6 +17,8 @@ reserved = {
 }
 
 tokens = [
+    'NUMBER',
+    'MULTIPLY',
     'QUOTE',
     'SPACE',
     'TEXT',
@@ -32,6 +34,7 @@ meta = [
 variables = [
 
 ]
+t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
@@ -47,6 +50,7 @@ t_ignore = '\n'
 
 lexer = lex.lex()
 
+def p_multiply(t)
 def p_say_onlyText(t):
     """
     say : SAY QUOTE QTEXT QUOTE
