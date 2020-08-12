@@ -34,7 +34,7 @@ variables = {
 
 }
 
-t_DIVIDE = r""
+t_DIVIDE = r"\w_ ?\\\w_?"
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_QUOTE = r"\"" 
