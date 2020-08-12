@@ -27,14 +27,15 @@ meta = [
 
 ]
  
-variables = [
+variables = {
 
-]
+}
+
 t_SAY = "say"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
-t_EQUAL = r"="
+t_EQUAL = r"\w+_ ?=\w+_ ?"
 
 def t_error(t):
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
@@ -43,6 +44,7 @@ def t_error(t):
 t_ignore = '\n'
 
 lexer = lex.lex()
+
 
 def p_say_onlyText(t):
     """
@@ -56,12 +58,16 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
-def p_vars(t): 
+def p_vars_set(t):
     """
     vars : EQUAL
     """
-    for i in t:
-        print(i)
+    name = ""
+    value = ""
+    stripped = str(t[1]).split("=")
+    name = stripped[0]
+    value = stripped[1]
+    variables[name] = value
 
 def p_error(t):
     if t is None:  # lexer error
@@ -86,4 +92,5 @@ if __name__ == "__main__":
         rich.print("[bold red]File Not Found[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
         exit(5)
- 
+    rich.print("[bold green]No Errors![/bold green]")
+    rich.print("[bold blue]Program exited with code 0[/bold blue]")

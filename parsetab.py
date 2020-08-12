@@ -27,7 +27,7 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> say","S'",1,None,None,None),
-  ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',49),
-  ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',50),
-  ('vars -> EQUAL','vars',1,'p_vars','complier.py',63),
+  ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',51),
+  ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',52),
+  ('vars -> EQUAL','vars',1,'p_vars_set','complier.py',63),
 ]
