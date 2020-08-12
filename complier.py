@@ -23,6 +23,7 @@ tokens = [
     'SPACE',
     'EQUAL',
     'QTEXT',
+    'VARIABLES'
 ] + list(reserved.values())
 
 meta = [
@@ -40,6 +41,7 @@ t_QUOTE = r"\""
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r"\w+_ ?=\w+_ ?"
+t_VARIABLES = r"\w"
 
 def t_error(t):
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
