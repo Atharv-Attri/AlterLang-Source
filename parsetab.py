@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'DIVIDE Divide EQUAL MULTIPLY NUMBER QTEXT QUOTE SAY SPACE VARIABLES\n    divide : DIVIDE\n    \n    vars : EQUAL\n    \n    vars : VARIABLES\n    \n    multiply : MULTIPLY\n    \n    say : SAY QUOTE QTEXT QUOTE\n        | SAY SPACE QTEXT \n    '
+_lr_signature = 'DIVIDE Divide EQUAL IF MULTIPLY NUMBER QTEXT QUOTE SAY SPACE VARIABLE\n    start : vars\n          | multiply\n          | say\n          | divide\n    \n    divide : DIVIDE\n    \n    vars : EQUAL\n    \n    vars : VARIABLE\n    \n    multiply : MULTIPLY\n    \n    say : SAY QUOTE QTEXT QUOTE\n        | SAY SPACE QTEXT \n    '
     
-_lr_action_items = {'DIVIDE':([0,],[2,]),'$end':([1,2,],[0,-1,]),}
+_lr_action_items = {'EQUAL':([0,],[6,]),'VARIABLE':([0,],[7,]),'MULTIPLY':([0,],[8,]),'SAY':([0,],[9,]),'DIVIDE':([0,],[10,]),'$end':([1,2,3,4,5,6,7,8,10,14,15,],[0,-1,-2,-3,-4,-6,-7,-8,-5,-10,-9,]),'QUOTE':([9,13,],[11,15,]),'SPACE':([9,],[12,]),'QTEXT':([11,12,],[13,14,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'divide':([0,],[1,]),}
+_lr_goto_items = {'start':([0,],[1,]),'vars':([0,],[2,]),'multiply':([0,],[3,]),'say':([0,],[4,]),'divide':([0,],[5,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,10 +26,14 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> divide","S'",1,None,None,None),
-  ('divide -> DIVIDE','divide',1,'p_divide','complier.py',61),
+  ("S' -> start","S'",1,None,None,None),
+  ('start -> vars','start',1,'p_start','complier.py',63),
+  ('start -> multiply','start',1,'p_start','complier.py',64),
+  ('start -> say','start',1,'p_start','complier.py',65),
+  ('start -> divide','start',1,'p_start','complier.py',66),
+  ('divide -> DIVIDE','divide',1,'p_divide','complier.py',70),
   ('vars -> EQUAL','vars',1,'p_vars_set','complier.py',84),
-  ('vars -> VARIABLES','vars',1,'p_vars_get','complier.py',95),
+  ('vars -> VARIABLE','vars',1,'p_vars_get','complier.py',95),
   ('multiply -> MULTIPLY','multiply',1,'p_multiply','complier.py',106),
   ('say -> SAY QUOTE QTEXT QUOTE','say',4,'p_say_onlyText','complier.py',127),
   ('say -> SAY SPACE QTEXT','say',3,'p_say_onlyText','complier.py',128),

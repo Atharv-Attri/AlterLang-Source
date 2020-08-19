@@ -1,3 +1,4 @@
+from os import write
 import sys
 from ply import lex, yacc
 import rich
@@ -26,7 +27,7 @@ tokens = [
     'SPACE',
     'EQUAL',
     'QTEXT',
-    'VARIABLES',
+    'VARIABLE',
     'DIVIDE'
 ] + list(reserved.values())
 
@@ -46,7 +47,7 @@ t_QUOTE = r"\""
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r"\w+_ ?=\w+_ ?"
-t_VARIABLES = r"\w+"
+t_VARIABLE = r"\w+"
 
 def t_error(t):
     global ERROR
@@ -58,6 +59,13 @@ t_ignore = '\n'
 
 lexer = lex.lex()
 
+def p_start(t):
+    """
+    start : vars
+          | multiply
+          | say
+          | divide
+    """
 def p_divide(t):
     """
     divide : DIVIDE
@@ -117,8 +125,8 @@ def p_multiply(t):
 
 def p_say_onlyText(t):
     """
-    say : SAY QUOTE QTEXT QUOTE
-        | SAY SPACE QTEXT 
+    say : SAY QTEXT
+        | SAY SPACE QTEXT
     """
     l = len(t)
     start = False
@@ -127,10 +135,6 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of 460f8b0... FIXED A MAJOR BUG
 def p_error(t):
     global ERROR
     ERROR = True
@@ -139,7 +143,7 @@ def p_error(t):
     print(f"Syntax Error: {t.value!r}")
 
 
-parser = yacc.yacc()
+parser = yacc.yacc(write_tables=False)
 
 if __name__ == "__main__":
     rich.print("[yellow]Hello From The NAME Community[/yellow]")

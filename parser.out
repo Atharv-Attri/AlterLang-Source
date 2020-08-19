@@ -3,59 +3,163 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     Divide
+    IF
     NUMBER
+    QUOTE
 
 Grammar
 
-Rule 0     S' -> divide
-Rule 1     divide -> DIVIDE
-Rule 2     vars -> EQUAL
-Rule 3     vars -> VARIABLES
-Rule 4     multiply -> MULTIPLY
-Rule 5     say -> SAY QUOTE QTEXT QUOTE
-Rule 6     say -> SAY SPACE QTEXT
+Rule 0     S' -> start
+Rule 1     start -> vars
+Rule 2     start -> multiply
+Rule 3     start -> say
+Rule 4     start -> divide
+Rule 5     divide -> DIVIDE
+Rule 6     vars -> EQUAL
+Rule 7     vars -> VARIABLE
+Rule 8     multiply -> MULTIPLY
+Rule 9     say -> SAY QTEXT
+Rule 10    say -> SAY SPACE QTEXT
 
 Terminals, with rules where they appear
 
-DIVIDE               : 1
+DIVIDE               : 5
 Divide               : 
-EQUAL                : 2
-MULTIPLY             : 4
+EQUAL                : 6
+IF                   : 
+MULTIPLY             : 8
 NUMBER               : 
-QTEXT                : 5 6
-QUOTE                : 5 5
-SAY                  : 5 6
-SPACE                : 6
-VARIABLES            : 3
+QTEXT                : 9 10
+QUOTE                : 
+SAY                  : 9 10
+SPACE                : 10
+VARIABLE             : 7
 error                : 
 
 Nonterminals, with rules where they appear
 
-divide               : 0
-multiply             : 
-say                  : 
-vars                 : 
+divide               : 4
+multiply             : 2
+say                  : 3
+start                : 0
+vars                 : 1
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . divide
-    (1) divide -> . DIVIDE
+    (0) S' -> . start
+    (1) start -> . vars
+    (2) start -> . multiply
+    (3) start -> . say
+    (4) start -> . divide
+    (6) vars -> . EQUAL
+    (7) vars -> . VARIABLE
+    (8) multiply -> . MULTIPLY
+    (9) say -> . SAY QTEXT
+    (10) say -> . SAY SPACE QTEXT
+    (5) divide -> . DIVIDE
 
-    DIVIDE          shift and go to state 2
+    EQUAL           shift and go to state 6
+    VARIABLE        shift and go to state 7
+    MULTIPLY        shift and go to state 8
+    SAY             shift and go to state 9
+    DIVIDE          shift and go to state 10
 
-    divide                         shift and go to state 1
+    start                          shift and go to state 1
+    vars                           shift and go to state 2
+    multiply                       shift and go to state 3
+    say                            shift and go to state 4
+    divide                         shift and go to state 5
 
 state 1
 
-    (0) S' -> divide .
+    (0) S' -> start .
 
 
 
 state 2
 
-    (1) divide -> DIVIDE .
+    (1) start -> vars .
 
-    $end            reduce using rule 1 (divide -> DIVIDE .)
+    $end            reduce using rule 1 (start -> vars .)
+
+
+state 3
+
+    (2) start -> multiply .
+
+    $end            reduce using rule 2 (start -> multiply .)
+
+
+state 4
+
+    (3) start -> say .
+
+    $end            reduce using rule 3 (start -> say .)
+
+
+state 5
+
+    (4) start -> divide .
+
+    $end            reduce using rule 4 (start -> divide .)
+
+
+state 6
+
+    (6) vars -> EQUAL .
+
+    $end            reduce using rule 6 (vars -> EQUAL .)
+
+
+state 7
+
+    (7) vars -> VARIABLE .
+
+    $end            reduce using rule 7 (vars -> VARIABLE .)
+
+
+state 8
+
+    (8) multiply -> MULTIPLY .
+
+    $end            reduce using rule 8 (multiply -> MULTIPLY .)
+
+
+state 9
+
+    (9) say -> SAY . QTEXT
+    (10) say -> SAY . SPACE QTEXT
+
+    QTEXT           shift and go to state 11
+    SPACE           shift and go to state 12
+
+
+state 10
+
+    (5) divide -> DIVIDE .
+
+    $end            reduce using rule 5 (divide -> DIVIDE .)
+
+
+state 11
+
+    (9) say -> SAY QTEXT .
+
+    $end            reduce using rule 9 (say -> SAY QTEXT .)
+
+
+state 12
+
+    (10) say -> SAY SPACE . QTEXT
+
+    QTEXT           shift and go to state 13
+
+
+state 13
+
+    (10) say -> SAY SPACE QTEXT .
+
+    $end            reduce using rule 10 (say -> SAY SPACE QTEXT .)
 
