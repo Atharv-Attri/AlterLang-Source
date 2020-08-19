@@ -16,6 +16,7 @@ import math
 ERROR = False
 reserved = {
     'say' : "SAY",
+    'if': "IF"
 
 }
 
@@ -25,10 +26,11 @@ tokens = [
     'SPACE',
     'EQUAL',
     'QTEXT',
-    'VARIABLES',
     'DIVIDE',
     'PAREN_IN',
     'BOOL',
+    'VARIABLE',
+    'NUMBER'
 ] + list(reserved.values())
 
 meta = [
@@ -42,14 +44,17 @@ variables = {
 t_DIVIDE = r"[A-Za-z0-9]+/[A-Za-z0-9]+"
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
+t_IF = "if4"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r".+_ ?=.+_ ?"
-t_VARIABLES = r".+"
 t_PAREN_IN = r"\(\"?\w+_ ?\"?\)"
 t_BOOL = "bool"
-
+t_NUMBER = r'\d+'
+def t_VARIABLE(t):
+    r".+"
+    
 def t_error(t):
     global ERROR
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
@@ -67,6 +72,7 @@ def p_start(t):
           | vars
           | say
           | multiply
+          | if
     """
     return
 
@@ -118,10 +124,10 @@ def p_vars_set(t):
 
 def p_vars(t):
     """
-    vars : VARIABLES
+    vars : VARIABLE
     """
     tmp = t[1]
-    for i in t:
+    for i in t: 
         print(i)
     t.value = variables[str(tmp)]
     return t.value
@@ -163,15 +169,23 @@ def p_say_onlyText(t):
 
 def p_say_onlyVar(t):
     """
-    say : SAY SPACE VARIABLES 
+    say : SAY SPACE VARIABLE 
     """
+    for i in t:
+        print(i)
     try:
-        print(variables[t[3]])
+        print(variables[t[3].strip()])
     except KeyError:
         ERROR = True
-        rich.print("VARIABLE NOT FOUND")
+        rich.print("UNKOWN OBJECT")
         code1()
         
+def p_if_start(t):
+    """
+    if : IF '='
+    """
+    for i in t:
+        print(i)
  
 def p_error(t):
     global ERROR
@@ -185,7 +199,7 @@ parser = yacc.yacc(debug=False, write_tables=False)
 def code1():
     rich.print("[bold red]Errors![/bold red]")
     rich.print("[bold blue]Program exited with code 1[/bold blue]")
-    exit(1)
+    
 
 
 if __name__ == "__main__":
@@ -194,7 +208,7 @@ if __name__ == "__main__":
         with open(sys.argv[1], "r") as file:
             lines = file.readlines()
             for i in lines:
-                parser.parse(i)
+                print(parser.parse(i))
     except IndexError:
         rich.print("[bold red]No File Specifed[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
