@@ -127,6 +127,10 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 460f8b0... FIXED A MAJOR BUG
 def p_error(t):
     global ERROR
     ERROR = True

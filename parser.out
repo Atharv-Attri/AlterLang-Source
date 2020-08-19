@@ -1,0 +1,61 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    Divide
+    NUMBER
+
+Grammar
+
+Rule 0     S' -> divide
+Rule 1     divide -> DIVIDE
+Rule 2     vars -> EQUAL
+Rule 3     vars -> VARIABLES
+Rule 4     multiply -> MULTIPLY
+Rule 5     say -> SAY QUOTE QTEXT QUOTE
+Rule 6     say -> SAY SPACE QTEXT
+
+Terminals, with rules where they appear
+
+DIVIDE               : 1
+Divide               : 
+EQUAL                : 2
+MULTIPLY             : 4
+NUMBER               : 
+QTEXT                : 5 6
+QUOTE                : 5 5
+SAY                  : 5 6
+SPACE                : 6
+VARIABLES            : 3
+error                : 
+
+Nonterminals, with rules where they appear
+
+divide               : 0
+multiply             : 
+say                  : 
+vars                 : 
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . divide
+    (1) divide -> . DIVIDE
+
+    DIVIDE          shift and go to state 2
+
+    divide                         shift and go to state 1
+
+state 1
+
+    (0) S' -> divide .
+
+
+
+state 2
+
+    (1) divide -> DIVIDE .
+
+    $end            reduce using rule 1 (divide -> DIVIDE .)
+
