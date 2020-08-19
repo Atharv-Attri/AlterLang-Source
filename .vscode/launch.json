@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Module",
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "module": "complier",
-            "args": ["unit.altr"]
+            "program": "${file}",
+            "console": "integratedTerminal"
         }
     ]
 }

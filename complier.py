@@ -5,8 +5,6 @@ import math
 # TODO: Variable, While loop, For loop, math, conversion
 # !Due:    12   ,     14    ,    14   ,  12
 
-
-
 # ?: Variable: regular syntax: a = 2, a = "say", a = true. ENG syntax: set a to 2
 # ?: Math: regular syntax: 1+1 = 2, a += 1. ENG syntax: add 1 to a, add a to b
 # TODO: ?: While loop: TODO
@@ -21,16 +19,15 @@ reserved = {
 }
 
 tokens = [
+    'Divide',
+    'NUMBER',
     'MULTIPLY',
     'QUOTE',
     'SPACE',
     'EQUAL',
     'QTEXT',
-    'DIVIDE',
-    'PAREN_IN',
-    'BOOL',
-    'VARIABLE',
-    'NUMBER'
+    'VARIABLES',
+    'DIVIDE'
 ] + list(reserved.values())
 
 meta = [
@@ -48,13 +45,9 @@ t_IF = "if4"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
-t_EQUAL = r".+_ ?=.+_ ?"
-t_PAREN_IN = r"\(\"?\w+_ ?\"?\)"
-t_BOOL = "bool"
-t_NUMBER = r'\d+'
-def t_VARIABLE(t):
-    r".+"
-    
+t_EQUAL = r"\w+_ ?=\w+_ ?"
+t_VARIABLES = r"\w+"
+
 def t_error(t):
     global ERROR
     rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
@@ -64,36 +57,6 @@ def t_error(t):
 t_ignore = '\n'
 
 lexer = lex.lex()
-
-def p_start(t):
-    """
-    start : bool
-          | divide
-          | vars
-          | say
-          | multiply
-          | if
-    """
-    return
-
-def p_bool(t):
-    """
-    bool : BOOL PAREN_IN
-         | BOOL SPACE PAREN_IN
-    """
-    entry = 2
-    if " " in t:
-        print("SPACE!")
-        entry = 3
-    t[entry] = t[entry].strip('"')
-    t[entry] = t[entry].strip('?')
-
-    if t[entry] == "true" or t[entry] == "1":
-        return True
-    elif t[entry] == "false" or t[entry] == "0":
-        return False
-    rich.print(f"")
-
 
 def p_divide(t):
     """
@@ -109,7 +72,6 @@ def p_divide(t):
     except ValueError:
         rich.print("[bold red]Multiplying a non number[/bold red]\n[bold blue]Error Ignored, this may cause your program to malfunction, please fix[/bold blue]")
 
-
 def p_vars_set(t):
     """
     vars : EQUAL
@@ -121,8 +83,7 @@ def p_vars_set(t):
     value = stripped[1]
     variables[name] = value
 
-
-def p_vars(t):
+def p_vars_get(t):
     """
     vars : VARIABLE
     """
@@ -154,7 +115,6 @@ def p_multiply(t):
         except:
             pass
 
-
 def p_say_onlyText(t):
     """
     say : SAY QUOTE QTEXT QUOTE
@@ -167,26 +127,6 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
-def p_say_onlyVar(t):
-    """
-    say : SAY SPACE VARIABLE 
-    """
-    for i in t:
-        print(i)
-    try:
-        print(variables[t[3].strip()])
-    except KeyError:
-        ERROR = True
-        rich.print("UNKOWN OBJECT")
-        code1()
-        
-def p_if_start(t):
-    """
-    if : IF '='
-    """
-    for i in t:
-        print(i)
- 
 def p_error(t):
     global ERROR
     ERROR = True
@@ -194,21 +134,16 @@ def p_error(t):
         return
     print(f"Syntax Error: {t.value!r}")
 
-parser = yacc.yacc(debug=False, write_tables=False)
 
-def code1():
-    rich.print("[bold red]Errors![/bold red]")
-    rich.print("[bold blue]Program exited with code 1[/bold blue]")
-    
-
+parser = yacc.yacc()
 
 if __name__ == "__main__":
-    rich.print("[yellow]Hello From The Alter Community[/yellow]")
+    rich.print("[yellow]Hello From The NAME Community[/yellow]")
     try:
         with open(sys.argv[1], "r") as file:
-            lines = file.readlines()
-            for i in lines:
-                print(parser.parse(i))
+            raw = file.readlines()
+            for i in raw:
+                parser.parse(i)
     except IndexError:
         rich.print("[bold red]No File Specifed[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
@@ -218,7 +153,8 @@ if __name__ == "__main__":
         rich.print("[bold blue]Program exited with code 5[/bold blue]")
         exit(5)
     if ERROR == True:
-        code1()
+        rich.print("[bold red]Errors![/bold red]")
+        rich.print("[bold blue]Program exited with code 1[/bold blue]")
     else:
         rich.print("[bold green]No Errors![/bold green]")
         rich.print("[bold blue]Program exited with code 0[/bold blue]")
