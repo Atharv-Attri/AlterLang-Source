@@ -3,8 +3,6 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     Divide
-    IF
-    NUMBER
     QUOTE
 
 Grammar
@@ -14,31 +12,35 @@ Rule 1     start -> vars
 Rule 2     start -> multiply
 Rule 3     start -> say
 Rule 4     start -> divide
-Rule 5     divide -> DIVIDE
-Rule 6     vars -> EQUAL
-Rule 7     vars -> VARIABLE
-Rule 8     multiply -> MULTIPLY
-Rule 9     say -> SAY QTEXT
-Rule 10    say -> SAY SPACE QTEXT
+Rule 5     start -> if
+Rule 6     divide -> DIVIDE
+Rule 7     vars -> EQUAL
+Rule 8     vars -> VARIABLE
+Rule 9     multiply -> MULTIPLY
+Rule 10    say -> SAY QTEXT
+Rule 11    say -> SAY SPACE QTEXT
+Rule 12    if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER
 
 Terminals, with rules where they appear
 
-DIVIDE               : 5
+DIVIDE               : 6
 Divide               : 
-EQUAL                : 6
-IF                   : 
-MULTIPLY             : 8
-NUMBER               : 
-QTEXT                : 9 10
+EQUAL                : 7
+IF                   : 12
+LEQUAL               : 12 12
+MULTIPLY             : 9
+NUMBER               : 12 12
+QTEXT                : 10 11
 QUOTE                : 
-SAY                  : 9 10
-SPACE                : 10
-VARIABLE             : 7
+SAY                  : 10 11
+SPACE                : 11 12
+VARIABLE             : 8
 error                : 
 
 Nonterminals, with rules where they appear
 
 divide               : 4
+if                   : 5
 multiply             : 2
 say                  : 3
 start                : 0
@@ -53,24 +55,28 @@ state 0
     (2) start -> . multiply
     (3) start -> . say
     (4) start -> . divide
-    (6) vars -> . EQUAL
-    (7) vars -> . VARIABLE
-    (8) multiply -> . MULTIPLY
-    (9) say -> . SAY QTEXT
-    (10) say -> . SAY SPACE QTEXT
-    (5) divide -> . DIVIDE
+    (5) start -> . if
+    (7) vars -> . EQUAL
+    (8) vars -> . VARIABLE
+    (9) multiply -> . MULTIPLY
+    (10) say -> . SAY QTEXT
+    (11) say -> . SAY SPACE QTEXT
+    (6) divide -> . DIVIDE
+    (12) if -> . IF SPACE NUMBER LEQUAL LEQUAL NUMBER
 
-    EQUAL           shift and go to state 6
-    VARIABLE        shift and go to state 7
-    MULTIPLY        shift and go to state 8
-    SAY             shift and go to state 9
-    DIVIDE          shift and go to state 10
+    EQUAL           shift and go to state 7
+    VARIABLE        shift and go to state 8
+    MULTIPLY        shift and go to state 9
+    SAY             shift and go to state 10
+    DIVIDE          shift and go to state 11
+    IF              shift and go to state 12
 
     start                          shift and go to state 1
     vars                           shift and go to state 2
     multiply                       shift and go to state 3
     say                            shift and go to state 4
     divide                         shift and go to state 5
+    if                             shift and go to state 6
 
 state 1
 
@@ -108,58 +114,107 @@ state 5
 
 state 6
 
-    (6) vars -> EQUAL .
+    (5) start -> if .
 
-    $end            reduce using rule 6 (vars -> EQUAL .)
+    $end            reduce using rule 5 (start -> if .)
 
 
 state 7
 
-    (7) vars -> VARIABLE .
+    (7) vars -> EQUAL .
 
-    $end            reduce using rule 7 (vars -> VARIABLE .)
+    $end            reduce using rule 7 (vars -> EQUAL .)
 
 
 state 8
 
-    (8) multiply -> MULTIPLY .
+    (8) vars -> VARIABLE .
 
-    $end            reduce using rule 8 (multiply -> MULTIPLY .)
+    $end            reduce using rule 8 (vars -> VARIABLE .)
 
 
 state 9
 
-    (9) say -> SAY . QTEXT
-    (10) say -> SAY . SPACE QTEXT
+    (9) multiply -> MULTIPLY .
 
-    QTEXT           shift and go to state 11
-    SPACE           shift and go to state 12
+    $end            reduce using rule 9 (multiply -> MULTIPLY .)
 
 
 state 10
 
-    (5) divide -> DIVIDE .
+    (10) say -> SAY . QTEXT
+    (11) say -> SAY . SPACE QTEXT
 
-    $end            reduce using rule 5 (divide -> DIVIDE .)
+    QTEXT           shift and go to state 13
+    SPACE           shift and go to state 14
 
 
 state 11
 
-    (9) say -> SAY QTEXT .
+    (6) divide -> DIVIDE .
 
-    $end            reduce using rule 9 (say -> SAY QTEXT .)
+    $end            reduce using rule 6 (divide -> DIVIDE .)
 
 
 state 12
 
-    (10) say -> SAY SPACE . QTEXT
+    (12) if -> IF . SPACE NUMBER LEQUAL LEQUAL NUMBER
 
-    QTEXT           shift and go to state 13
+    SPACE           shift and go to state 15
 
 
 state 13
 
-    (10) say -> SAY SPACE QTEXT .
+    (10) say -> SAY QTEXT .
 
-    $end            reduce using rule 10 (say -> SAY SPACE QTEXT .)
+    $end            reduce using rule 10 (say -> SAY QTEXT .)
+
+
+state 14
+
+    (11) say -> SAY SPACE . QTEXT
+
+    QTEXT           shift and go to state 16
+
+
+state 15
+
+    (12) if -> IF SPACE . NUMBER LEQUAL LEQUAL NUMBER
+
+    NUMBER          shift and go to state 17
+
+
+state 16
+
+    (11) say -> SAY SPACE QTEXT .
+
+    $end            reduce using rule 11 (say -> SAY SPACE QTEXT .)
+
+
+state 17
+
+    (12) if -> IF SPACE NUMBER . LEQUAL LEQUAL NUMBER
+
+    LEQUAL          shift and go to state 18
+
+
+state 18
+
+    (12) if -> IF SPACE NUMBER LEQUAL . LEQUAL NUMBER
+
+    LEQUAL          shift and go to state 19
+
+
+state 19
+
+    (12) if -> IF SPACE NUMBER LEQUAL LEQUAL . NUMBER
+
+    NUMBER          shift and go to state 20
+
+
+state 20
+
+    (12) if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER .
+
+    $end            reduce using rule 12 (if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER .)
 

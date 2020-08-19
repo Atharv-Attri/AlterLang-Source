@@ -28,7 +28,9 @@ tokens = [
     'EQUAL',
     'QTEXT',
     'VARIABLE',
-    'DIVIDE'
+    'DIVIDE',
+    'NUMBER',
+    "LEQUAL"
 ] + list(reserved.values())
 
 meta = [
@@ -38,16 +40,23 @@ meta = [
 variables = {
 
 }
-
+t_LEQUAL = "="
+t_NUMBER = r'[0-9]+'
 t_DIVIDE = r"[A-Za-z0-9]+/[A-Za-z0-9]+"
 t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
-t_IF = "if4"
+t_IF = "if"
 t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r"\w+_ ?=\w+_ ?"
-t_VARIABLE = r"\w+"
+
+def t_VARIABLE(t):
+    r"\.\w+"
+    if t in variables:
+        return True
+    else:
+        print("SYMBOL NOT")
 
 def t_error(t):
     global ERROR
@@ -55,7 +64,8 @@ def t_error(t):
     t.lexer.skip(1)
     ERROR = True
 
-t_ignore = '\n'
+
+t_ignore = r'\n'
 
 lexer = lex.lex()
 
@@ -65,6 +75,7 @@ def p_start(t):
           | multiply
           | say
           | divide
+          | if
     """
 def p_divide(t):
     """
@@ -134,6 +145,19 @@ def p_say_onlyText(t):
         if str(i).startswith('"'):
             to_print = str(i).strip('"')
             print(to_print)
+
+def p_if_start(t):
+    """
+    if : IF SPACE NUMBER LEQUAL LEQUAL NUMBER
+    """
+    for i in t:
+        print(i)
+    
+
+def p_orif(t):
+    """
+    orif : 
+    """
 
 def p_error(t):
     global ERROR
