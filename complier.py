@@ -149,6 +149,21 @@ def p_say_onlyText(t):
 def p_if_start(t):
     """
     if : IF SPACE NUMBER LEQUAL LEQUAL NUMBER
+    if : IF NUMBER (>) NUMBER
+    if : IF NUMBER (<) NUMBER
+    if : IF NUMBER (=) NUMBER
+    if : IF NUMBER (<), (=) NUMBER
+    if : IF NUMBER (>), (=) NUMBER
+    if : IF NUMBER (>) VARIABLE
+    if : IF NUMBER (<) VARIABLE
+    if : IF NUMBER (=) VARIABLE
+    if : IF NUMBER (<), (=) VARIABLE
+    if : IF NUMBER (>), (=) VARIABLE
+    if : IF VARIABLE (>) VARIABLE
+    if : IF VARIABLE (<) VARIABLE
+    if : IF VARIABLE (=) VARIABLE
+    if : IF VARIABLE (<), (=) VARIABLE
+    if : IF VARIABLE (>), (=) VARIABLE
     """
     for i in t:
         print(i)
