@@ -154,11 +154,6 @@ def p_if_start(t):
         print(i)
     
 
-def p_orif(t):
-    """
-    orif : 
-    """
-
 def p_error(t):
     global ERROR
     ERROR = True
