@@ -4,6 +4,7 @@ Unused terminals:
 
     Divide
     QUOTE
+    WHILE
 
 Grammar
 
@@ -13,33 +14,50 @@ Rule 2     start -> multiply
 Rule 3     start -> say
 Rule 4     start -> divide
 Rule 5     start -> if
-Rule 6     divide -> DIVIDE
-Rule 7     vars -> EQUAL
-Rule 8     vars -> VARIABLE
-Rule 9     multiply -> MULTIPLY
-Rule 10    say -> SAY QTEXT
-Rule 11    say -> SAY SPACE QTEXT
-Rule 12    if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER
+Rule 6     start -> endmark
+Rule 7     divide -> DIVIDE
+Rule 8     vars -> EQUAL
+Rule 9     vars -> VARIABLE
+Rule 10    multiply -> MULTIPLY
+Rule 11    say -> SAY QTEXT
+Rule 12    say -> SAY SPACE QTEXT
+Rule 13    if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK
+Rule 14    if -> IF SPACE NUMBER LGT NUMBER SPACE STARTMARK
+Rule 15    if -> IF SPACE NUMBER LLT NUMBER SPACE STARTMARK
+Rule 16    if -> IF SPACE NUMBER LLT LEQUAL NUMBER SPACE STARTMARK
+Rule 17    if -> IF SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK
+Rule 18    if -> IF SPACE NUMBER LGT VARIABLE SPACE STARTMARK
+Rule 19    if -> IF SPACE NUMBER LLT VARIABLE SPACE STARTMARK
+Rule 20    if -> IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
+Rule 21    if -> IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
+Rule 22    if -> IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
+Rule 23    endmark -> ENDMARK
 
 Terminals, with rules where they appear
 
-DIVIDE               : 6
+DIVIDE               : 7
 Divide               : 
-EQUAL                : 7
-IF                   : 12
-LEQUAL               : 12 12
-MULTIPLY             : 9
-NUMBER               : 12 12
-QTEXT                : 10 11
+ENDMARK              : 23
+EQUAL                : 8
+IF                   : 13 14 15 16 17 18 19 20 21 22
+LEQUAL               : 13 13 16 17 20 21 22
+LGT                  : 14 17 18 22
+LLT                  : 15 16 19 21
+MULTIPLY             : 10
+NUMBER               : 13 13 14 14 15 15 16 16 17 17 18 19 20 21 22
+QTEXT                : 11 12
 QUOTE                : 
-SAY                  : 10 11
-SPACE                : 11 12
-VARIABLE             : 8
+SAY                  : 11 12
+SPACE                : 12 13 13 14 14 15 15 16 16 17 17 18 18 19 19 20 20 21 21 22 22
+STARTMARK            : 13 14 15 16 17 18 19 20 21 22
+VARIABLE             : 9 18 19 20 21 22
+WHILE                : 
 error                : 
 
 Nonterminals, with rules where they appear
 
 divide               : 4
+endmark              : 6
 if                   : 5
 multiply             : 2
 say                  : 3
@@ -56,20 +74,32 @@ state 0
     (3) start -> . say
     (4) start -> . divide
     (5) start -> . if
-    (7) vars -> . EQUAL
-    (8) vars -> . VARIABLE
-    (9) multiply -> . MULTIPLY
-    (10) say -> . SAY QTEXT
-    (11) say -> . SAY SPACE QTEXT
-    (6) divide -> . DIVIDE
-    (12) if -> . IF SPACE NUMBER LEQUAL LEQUAL NUMBER
+    (6) start -> . endmark
+    (8) vars -> . EQUAL
+    (9) vars -> . VARIABLE
+    (10) multiply -> . MULTIPLY
+    (11) say -> . SAY QTEXT
+    (12) say -> . SAY SPACE QTEXT
+    (7) divide -> . DIVIDE
+    (13) if -> . IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK
+    (14) if -> . IF SPACE NUMBER LGT NUMBER SPACE STARTMARK
+    (15) if -> . IF SPACE NUMBER LLT NUMBER SPACE STARTMARK
+    (16) if -> . IF SPACE NUMBER LLT LEQUAL NUMBER SPACE STARTMARK
+    (17) if -> . IF SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK
+    (18) if -> . IF SPACE NUMBER LGT VARIABLE SPACE STARTMARK
+    (19) if -> . IF SPACE NUMBER LLT VARIABLE SPACE STARTMARK
+    (20) if -> . IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
+    (21) if -> . IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
+    (22) if -> . IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
+    (23) endmark -> . ENDMARK
 
-    EQUAL           shift and go to state 7
-    VARIABLE        shift and go to state 8
-    MULTIPLY        shift and go to state 9
-    SAY             shift and go to state 10
-    DIVIDE          shift and go to state 11
-    IF              shift and go to state 12
+    EQUAL           shift and go to state 8
+    VARIABLE        shift and go to state 9
+    MULTIPLY        shift and go to state 10
+    SAY             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    IF              shift and go to state 13
+    ENDMARK         shift and go to state 14
 
     start                          shift and go to state 1
     vars                           shift and go to state 2
@@ -77,6 +107,7 @@ state 0
     say                            shift and go to state 4
     divide                         shift and go to state 5
     if                             shift and go to state 6
+    endmark                        shift and go to state 7
 
 state 1
 
@@ -121,100 +152,390 @@ state 6
 
 state 7
 
-    (7) vars -> EQUAL .
+    (6) start -> endmark .
 
-    $end            reduce using rule 7 (vars -> EQUAL .)
+    $end            reduce using rule 6 (start -> endmark .)
 
 
 state 8
 
-    (8) vars -> VARIABLE .
+    (8) vars -> EQUAL .
 
-    $end            reduce using rule 8 (vars -> VARIABLE .)
+    $end            reduce using rule 8 (vars -> EQUAL .)
 
 
 state 9
 
-    (9) multiply -> MULTIPLY .
+    (9) vars -> VARIABLE .
 
-    $end            reduce using rule 9 (multiply -> MULTIPLY .)
+    $end            reduce using rule 9 (vars -> VARIABLE .)
 
 
 state 10
 
-    (10) say -> SAY . QTEXT
-    (11) say -> SAY . SPACE QTEXT
+    (10) multiply -> MULTIPLY .
 
-    QTEXT           shift and go to state 13
-    SPACE           shift and go to state 14
+    $end            reduce using rule 10 (multiply -> MULTIPLY .)
 
 
 state 11
 
-    (6) divide -> DIVIDE .
+    (11) say -> SAY . QTEXT
+    (12) say -> SAY . SPACE QTEXT
 
-    $end            reduce using rule 6 (divide -> DIVIDE .)
+    QTEXT           shift and go to state 15
+    SPACE           shift and go to state 16
 
 
 state 12
 
-    (12) if -> IF . SPACE NUMBER LEQUAL LEQUAL NUMBER
+    (7) divide -> DIVIDE .
 
-    SPACE           shift and go to state 15
+    $end            reduce using rule 7 (divide -> DIVIDE .)
 
 
 state 13
 
-    (10) say -> SAY QTEXT .
+    (13) if -> IF . SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK
+    (14) if -> IF . SPACE NUMBER LGT NUMBER SPACE STARTMARK
+    (15) if -> IF . SPACE NUMBER LLT NUMBER SPACE STARTMARK
+    (16) if -> IF . SPACE NUMBER LLT LEQUAL NUMBER SPACE STARTMARK
+    (17) if -> IF . SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK
+    (18) if -> IF . SPACE NUMBER LGT VARIABLE SPACE STARTMARK
+    (19) if -> IF . SPACE NUMBER LLT VARIABLE SPACE STARTMARK
+    (20) if -> IF . SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
+    (21) if -> IF . SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
+    (22) if -> IF . SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
 
-    $end            reduce using rule 10 (say -> SAY QTEXT .)
+    SPACE           shift and go to state 17
 
 
 state 14
 
-    (11) say -> SAY SPACE . QTEXT
+    (23) endmark -> ENDMARK .
 
-    QTEXT           shift and go to state 16
+    $end            reduce using rule 23 (endmark -> ENDMARK .)
 
 
 state 15
 
-    (12) if -> IF SPACE . NUMBER LEQUAL LEQUAL NUMBER
+    (11) say -> SAY QTEXT .
 
-    NUMBER          shift and go to state 17
+    $end            reduce using rule 11 (say -> SAY QTEXT .)
 
 
 state 16
 
-    (11) say -> SAY SPACE QTEXT .
+    (12) say -> SAY SPACE . QTEXT
 
-    $end            reduce using rule 11 (say -> SAY SPACE QTEXT .)
+    QTEXT           shift and go to state 18
 
 
 state 17
 
-    (12) if -> IF SPACE NUMBER . LEQUAL LEQUAL NUMBER
+    (13) if -> IF SPACE . NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK
+    (14) if -> IF SPACE . NUMBER LGT NUMBER SPACE STARTMARK
+    (15) if -> IF SPACE . NUMBER LLT NUMBER SPACE STARTMARK
+    (16) if -> IF SPACE . NUMBER LLT LEQUAL NUMBER SPACE STARTMARK
+    (17) if -> IF SPACE . NUMBER LGT LEQUAL NUMBER SPACE STARTMARK
+    (18) if -> IF SPACE . NUMBER LGT VARIABLE SPACE STARTMARK
+    (19) if -> IF SPACE . NUMBER LLT VARIABLE SPACE STARTMARK
+    (20) if -> IF SPACE . NUMBER LEQUAL VARIABLE SPACE STARTMARK
+    (21) if -> IF SPACE . NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
+    (22) if -> IF SPACE . NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
 
-    LEQUAL          shift and go to state 18
+    NUMBER          shift and go to state 19
 
 
 state 18
 
-    (12) if -> IF SPACE NUMBER LEQUAL . LEQUAL NUMBER
+    (12) say -> SAY SPACE QTEXT .
 
-    LEQUAL          shift and go to state 19
+    $end            reduce using rule 12 (say -> SAY SPACE QTEXT .)
 
 
 state 19
 
-    (12) if -> IF SPACE NUMBER LEQUAL LEQUAL . NUMBER
+    (13) if -> IF SPACE NUMBER . LEQUAL LEQUAL NUMBER SPACE STARTMARK
+    (14) if -> IF SPACE NUMBER . LGT NUMBER SPACE STARTMARK
+    (15) if -> IF SPACE NUMBER . LLT NUMBER SPACE STARTMARK
+    (16) if -> IF SPACE NUMBER . LLT LEQUAL NUMBER SPACE STARTMARK
+    (17) if -> IF SPACE NUMBER . LGT LEQUAL NUMBER SPACE STARTMARK
+    (18) if -> IF SPACE NUMBER . LGT VARIABLE SPACE STARTMARK
+    (19) if -> IF SPACE NUMBER . LLT VARIABLE SPACE STARTMARK
+    (20) if -> IF SPACE NUMBER . LEQUAL VARIABLE SPACE STARTMARK
+    (21) if -> IF SPACE NUMBER . LLT LEQUAL VARIABLE SPACE STARTMARK
+    (22) if -> IF SPACE NUMBER . LGT LEQUAL VARIABLE SPACE STARTMARK
 
-    NUMBER          shift and go to state 20
+    LEQUAL          shift and go to state 20
+    LGT             shift and go to state 21
+    LLT             shift and go to state 22
 
 
 state 20
 
-    (12) if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER .
+    (13) if -> IF SPACE NUMBER LEQUAL . LEQUAL NUMBER SPACE STARTMARK
+    (20) if -> IF SPACE NUMBER LEQUAL . VARIABLE SPACE STARTMARK
 
-    $end            reduce using rule 12 (if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER .)
+    LEQUAL          shift and go to state 23
+    VARIABLE        shift and go to state 24
+
+
+state 21
+
+    (14) if -> IF SPACE NUMBER LGT . NUMBER SPACE STARTMARK
+    (17) if -> IF SPACE NUMBER LGT . LEQUAL NUMBER SPACE STARTMARK
+    (18) if -> IF SPACE NUMBER LGT . VARIABLE SPACE STARTMARK
+    (22) if -> IF SPACE NUMBER LGT . LEQUAL VARIABLE SPACE STARTMARK
+
+    NUMBER          shift and go to state 25
+    LEQUAL          shift and go to state 26
+    VARIABLE        shift and go to state 27
+
+
+state 22
+
+    (15) if -> IF SPACE NUMBER LLT . NUMBER SPACE STARTMARK
+    (16) if -> IF SPACE NUMBER LLT . LEQUAL NUMBER SPACE STARTMARK
+    (19) if -> IF SPACE NUMBER LLT . VARIABLE SPACE STARTMARK
+    (21) if -> IF SPACE NUMBER LLT . LEQUAL VARIABLE SPACE STARTMARK
+
+    NUMBER          shift and go to state 28
+    LEQUAL          shift and go to state 29
+    VARIABLE        shift and go to state 30
+
+
+state 23
+
+    (13) if -> IF SPACE NUMBER LEQUAL LEQUAL . NUMBER SPACE STARTMARK
+
+    NUMBER          shift and go to state 31
+
+
+state 24
+
+    (20) if -> IF SPACE NUMBER LEQUAL VARIABLE . SPACE STARTMARK
+
+    SPACE           shift and go to state 32
+
+
+state 25
+
+    (14) if -> IF SPACE NUMBER LGT NUMBER . SPACE STARTMARK
+
+    SPACE           shift and go to state 33
+
+
+state 26
+
+    (17) if -> IF SPACE NUMBER LGT LEQUAL . NUMBER SPACE STARTMARK
+    (22) if -> IF SPACE NUMBER LGT LEQUAL . VARIABLE SPACE STARTMARK
+
+    NUMBER          shift and go to state 34
+    VARIABLE        shift and go to state 35
+
+
+state 27
+
+    (18) if -> IF SPACE NUMBER LGT VARIABLE . SPACE STARTMARK
+
+    SPACE           shift and go to state 36
+
+
+state 28
+
+    (15) if -> IF SPACE NUMBER LLT NUMBER . SPACE STARTMARK
+
+    SPACE           shift and go to state 37
+
+
+state 29
+
+    (16) if -> IF SPACE NUMBER LLT LEQUAL . NUMBER SPACE STARTMARK
+    (21) if -> IF SPACE NUMBER LLT LEQUAL . VARIABLE SPACE STARTMARK
+
+    NUMBER          shift and go to state 38
+    VARIABLE        shift and go to state 39
+
+
+state 30
+
+    (19) if -> IF SPACE NUMBER LLT VARIABLE . SPACE STARTMARK
+
+    SPACE           shift and go to state 40
+
+
+state 31
+
+    (13) if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER . SPACE STARTMARK
+
+    SPACE           shift and go to state 41
+
+
+state 32
+
+    (20) if -> IF SPACE NUMBER LEQUAL VARIABLE SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 42
+
+
+state 33
+
+    (14) if -> IF SPACE NUMBER LGT NUMBER SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 43
+
+
+state 34
+
+    (17) if -> IF SPACE NUMBER LGT LEQUAL NUMBER . SPACE STARTMARK
+
+    SPACE           shift and go to state 44
+
+
+state 35
+
+    (22) if -> IF SPACE NUMBER LGT LEQUAL VARIABLE . SPACE STARTMARK
+
+    SPACE           shift and go to state 45
+
+
+state 36
+
+    (18) if -> IF SPACE NUMBER LGT VARIABLE SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 46
+
+
+state 37
+
+    (15) if -> IF SPACE NUMBER LLT NUMBER SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 47
+
+
+state 38
+
+    (16) if -> IF SPACE NUMBER LLT LEQUAL NUMBER . SPACE STARTMARK
+
+    SPACE           shift and go to state 48
+
+
+state 39
+
+    (21) if -> IF SPACE NUMBER LLT LEQUAL VARIABLE . SPACE STARTMARK
+
+    SPACE           shift and go to state 49
+
+
+state 40
+
+    (19) if -> IF SPACE NUMBER LLT VARIABLE SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 50
+
+
+state 41
+
+    (13) if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 51
+
+
+state 42
+
+    (20) if -> IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK .
+
+    $end            reduce using rule 20 (if -> IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK .)
+
+
+state 43
+
+    (14) if -> IF SPACE NUMBER LGT NUMBER SPACE STARTMARK .
+
+    $end            reduce using rule 14 (if -> IF SPACE NUMBER LGT NUMBER SPACE STARTMARK .)
+
+
+state 44
+
+    (17) if -> IF SPACE NUMBER LGT LEQUAL NUMBER SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 52
+
+
+state 45
+
+    (22) if -> IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 53
+
+
+state 46
+
+    (18) if -> IF SPACE NUMBER LGT VARIABLE SPACE STARTMARK .
+
+    $end            reduce using rule 18 (if -> IF SPACE NUMBER LGT VARIABLE SPACE STARTMARK .)
+
+
+state 47
+
+    (15) if -> IF SPACE NUMBER LLT NUMBER SPACE STARTMARK .
+
+    $end            reduce using rule 15 (if -> IF SPACE NUMBER LLT NUMBER SPACE STARTMARK .)
+
+
+state 48
+
+    (16) if -> IF SPACE NUMBER LLT LEQUAL NUMBER SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 54
+
+
+state 49
+
+    (21) if -> IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE . STARTMARK
+
+    STARTMARK       shift and go to state 55
+
+
+state 50
+
+    (19) if -> IF SPACE NUMBER LLT VARIABLE SPACE STARTMARK .
+
+    $end            reduce using rule 19 (if -> IF SPACE NUMBER LLT VARIABLE SPACE STARTMARK .)
+
+
+state 51
+
+    (13) if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK .
+
+    $end            reduce using rule 13 (if -> IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK .)
+
+
+state 52
+
+    (17) if -> IF SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK .
+
+    $end            reduce using rule 17 (if -> IF SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK .)
+
+
+state 53
+
+    (22) if -> IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK .
+
+    $end            reduce using rule 22 (if -> IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK .)
+
+
+state 54
+
+    (16) if -> IF SPACE NUMBER LLT LEQUAL NUMBER SPACE STARTMARK .
+
+    $end            reduce using rule 16 (if -> IF SPACE NUMBER LLT LEQUAL NUMBER SPACE STARTMARK .)
+
+
+state 55
+
+    (21) if -> IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK .
+
+    $end            reduce using rule 21 (if -> IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK .)
 
