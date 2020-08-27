@@ -1,2 +1,4 @@
 a=1
-say .a
+while .a>8 ->
+say "a"
+<-
