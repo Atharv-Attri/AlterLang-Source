@@ -80,9 +80,11 @@ def t_VARIABLE(t):
         print("SYMBOL NOT")
         ERROR = True
 
+
 def t_error(t):
     global ERROR
-    rich.print(f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
+    rich.print(
+        f"[bold red]Illegal character {t.value[0]!r} on line {t.lexer.lineno}[/bold red]")
     t.lexer.skip(1)
     ERROR = True
 
@@ -90,6 +92,7 @@ def t_error(t):
 t_ignore = "\n\t"
 
 lexer = lex.lex()
+
 
 def p_start(t):
     """
@@ -151,6 +154,7 @@ def p_divide(t):
     except ValueError:
         rich.print("[bold red]Multiplying a non number[/bold red]\n[bold blue]Error Ignored, this may cause your program to malfunction, please fix[/bold blue]")
 
+
 def p_vars_set(t):
     """
     vars : EQUAL
@@ -162,12 +166,13 @@ def p_vars_set(t):
     value = stripped[1]
     variables[name] = value
 
+
 def p_vars_get(t):
     """
     vars : VARIABLE
     """
     tmp = t[1]
-    for i in t: 
+    for i in t:
         print(i)
     t.value = variables[str(tmp)]
     return t.value
@@ -193,6 +198,7 @@ def p_multiply(t):
                 print("0")
         except:
             pass
+
 
 def p_say_onlyText(t):
     """
@@ -436,7 +442,7 @@ def p_if_var_r_eng(t):
                 order.append("if")
             else:
                 meta["ifS"] = True
-                meta["lC"] = False
+                meta["lC"] = "." + False
                 order.append("if")
         elif t[4] == ">":
             if int(t[3]) >= int(variables(t[6])):

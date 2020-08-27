@@ -1,1 +1,1 @@
-# KinoScript
+# AlterLang
