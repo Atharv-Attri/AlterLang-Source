@@ -1,0 +1,7 @@
+a=5
+if 3<.a ->
+say "3 less than a"
+<-
+if 6 greater_than 5 ->
+say "6 greater than a"
+<-

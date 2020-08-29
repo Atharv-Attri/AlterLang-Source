@@ -18,7 +18,9 @@ reserved = {
     'if': "IF",
     'while' : "WHILE",
     'dump' : "DUMP",
-   
+    'ask' : "ASK",
+    'set' : "SET",
+    'to' : "TO"
 }
 
 tokens = [
@@ -51,6 +53,7 @@ variables = {
 }
 
 order = []
+t_ASK = "ask"
 t_DUMP = "dump"
 t_SUBTRACT = "-"
 t_ADD = r"\+"
@@ -72,12 +75,16 @@ t_QUOTE = r"\""
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r".{1}=.+"
+t_SET = "set"
+t_TO = "to"
+
+
 def t_VARIABLE(t):
     r"\..{1}"
     if t.value in variables:
         return t
     else:
-        print("SYMBOL NOT")
+        print("SYMBOL NOT FOUND")
         ERROR = True
 
 
@@ -106,6 +113,7 @@ def p_start(t):
           | add
           | subtract
           | dump
+          | ask
     """
 
 def p_dump(t):
@@ -149,7 +157,6 @@ def p_divide(t):
         for x, i in enumerate(tmp):
             tmp[x] = float(i)
         t.value = tmp[0] / tmp[1]
-        print(tmp[0] / tmp[1])
         return t.value
     except ValueError:
         rich.print("[bold red]Multiplying a non number[/bold red]\n[bold blue]Error Ignored, this may cause your program to malfunction, please fix[/bold blue]")
@@ -166,7 +173,7 @@ def p_vars_set(t):
     value = stripped[1]
     variables[name] = value
 
-
+    
 def p_vars_get(t):
     """
     vars : VARIABLE
@@ -177,6 +184,16 @@ def p_vars_get(t):
     t.value = variables[str(tmp)]
     return t.value
 
+
+def p_ask(t):
+    """
+    ask : ASK SPACE QTEXT
+    """
+    value = t[3].strip('"')
+    value = input(value)
+    variables[".L"] = value
+    t.value = value
+    return t
 
 def p_multiply(t):
     """
@@ -240,8 +257,7 @@ def p_if_num(t):
        | IF SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK
        
     """
-    for i in t:
-        print(i)
+    
     if len(t) == 9:
         if t[4] == "=" :
             if int(t[3]) == int(t[6]):
@@ -305,9 +321,7 @@ def p_if_var_r(t):
        | IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
     """
-    for i in t:
-        print(i)
-    print(len(t))
+    
     if len(t) == 9:
         if t[4] == "=":
             if int(t[3]) == int(variables(t[6])):
@@ -338,7 +352,7 @@ def p_if_var_r(t):
                 order.append("if")
     if len(t) == 8:
         if t[4] == ">":
-            if int(t[3]) > int(variables(t[5])):
+            if int(t[3]) > int(variables[t[5]]):
                 meta["ifS"] = True
                 meta["lC"] = True
                 order.append("if")
@@ -347,15 +361,14 @@ def p_if_var_r(t):
                 meta["lC"] = False
                 order.append("if")
         elif t[4] == "<":
-            if int(t[3]) < int(variable(t[5])):
+            if int(t[3]) < int(variables[t[5]]):
                 meta["ifS"] = True
                 meta["lC"] = True
                 order.append("if")
             else:
                 meta["ifS"] = True
                 meta["lC"] = False
-            order.append("if")
-    print(meta)
+                order.append("if")
 
 def p_if_num_eng(t):
     """
@@ -365,11 +378,7 @@ def p_if_num_eng(t):
        | IF SPACE NUMBER SPACE SLLT SPACE SLEQUAL SPACE NUMBER SPACE STARTMARK
        | IF SPACE NUMBER SPACE SLGT SPACE SLEQUAL SPACE NUMBER SPACE STARTMARK
     """
-    a = 0
-    print(len(t))
-    for i in t:
-        print(a,": ", i)
-        a += 1
+
     if len(t) == 12:
         if t[5] == "=" or t[5] == "equal_to":
             if int(t[3]) == int(t[9]):
@@ -516,22 +525,20 @@ def p_endmark(t):
             order.remove("if")
     except:
         pass
-    try:
-        if order[-1] == "while":
-            if meta["WC"][2] == "<":
-                if variables[meta["WC"][1]] < meta["WC"][3]:
-                    for x, i in enumerate(meta["WTD"]):
-                        parser.parse(i)
-                        meta["WTD"][-1] = None
-                        print(meta["WTD"])
-
-                else:
-                    print(meta["WTD"])
-
-                    meta["WTD"] = None
-                    meta["WLC"] = False
-    except:
-        pass
+    
+    if order[-1] == "while":
+        if meta["WC"][2] == "<":
+            a = True
+            tmp = meta["WTD"]
+            if variables["." + meta["WC"][1]] < meta["WC"][3]:
+                for i in tmp:
+                    parser.parse(i)
+                    tmp[-1] = None
+            else:
+                meta["WTD"] = None
+                meta["WLC"] = False
+                a = False
+    
 
 
 def p_error(t):
@@ -542,7 +549,7 @@ def p_error(t):
     print(f"Syntax Error: {t.value!r} ")
 
 
-parser = yacc.yacc( write_tables=False)
+parser = yacc.yacc(debug = False,write_tables=False)
 
 
 if __name__ == "__main__":
