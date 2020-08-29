@@ -18,16 +18,13 @@ reserved = {
     'if': "IF",
     'while' : "WHILE",
     'dump' : "DUMP",
-    'ask' : "ASK",
-    'set' : "SET",
-    'to' : "TO"
+    'ask' : "ASK"
 }
 
 tokens = [
     'SUBTRACT',
     'ADD',
     'MULTIPLY',
-    'QUOTE',
     'SPACE',
     'EQUAL',
     'QTEXT',
@@ -71,12 +68,10 @@ t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_IF = "if"
 t_WHILE = "while"
-t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r".{1}=.+"
-t_SET = "set"
-t_TO = "to"
+
 
 
 def t_VARIABLE(t):
@@ -317,11 +312,10 @@ def p_if_var_r(t):
     """ 
     if : IF SPACE NUMBER LGT VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LLT VARIABLE SPACE STARTMARK
-       | IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
+       | IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
     """
-    
     if len(t) == 9:
         if t[4] == "=":
             if int(t[3]) == int(variables(t[6])):
@@ -525,19 +519,21 @@ def p_endmark(t):
             order.remove("if")
     except:
         pass
-    
-    if order[-1] == "while":
-        if meta["WC"][2] == "<":
-            a = True
-            tmp = meta["WTD"]
-            if variables["." + meta["WC"][1]] < meta["WC"][3]:
-                for i in tmp:
-                    parser.parse(i)
-                    tmp[-1] = None
-            else:
-                meta["WTD"] = None
-                meta["WLC"] = False
-                a = False
+    try:
+        if order[-1] == "while":
+            if meta["WC"][2] == "<":
+                a = True
+                tmp = meta["WTD"]
+                if variables["." + meta["WC"][1]] < meta["WC"][3]:
+                    for i in tmp:
+                        parser.parse(i)
+                        tmp[-1] = None
+                else:
+                    meta["WTD"] = None
+                    meta["WLC"] = False
+                    a = False
+    except:
+        pass
     
 
 
