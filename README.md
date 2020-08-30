@@ -51,3 +51,4 @@ Documentation coming soon!
 Huge thanks to [PLY](https://github.com/dabeaz/ply) and [Rich](https://github.com/willmcgugan/rich) for helping make Alter possible.
 [Rich](https://github.com/willmcgugan/rich) is distributed under the MIT Licence
 You can read Ply's Licence [Here](https://github.com/dabeaz/ply)
+
