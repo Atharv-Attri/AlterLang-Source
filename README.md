@@ -15,7 +15,7 @@ To learn how to use the language, please skip down to How to Install
 
 ### Why Alter was made (And what's up with the name?)
 Alter is made so that anyone can learn to code. If it's your first time learning to code, Alter is the language to 
-start with. Alter got it's name because learning to code is a life-altering decision, yet many people miss out on it. A majority of people don't start because when people think of programming today, the general thought tends to be something complicated like:
+start with. Alter got it's name because learning to code is a life-altering decision, yet many people miss out on it. A majority of people don't start because when non-programmers think of programming today, the general thought tends to be something complicated like:
 
 ```C
 include <stdio.h>
