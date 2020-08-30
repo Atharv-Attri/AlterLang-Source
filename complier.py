@@ -8,11 +8,11 @@ import math
 ERROR = False
 #declare reserved tokens
 reserved = {
-    'say' : "SAY",
+    'say': "SAY",
     'if': "IF",
-    'while' : "WHILE",
-    'dump' : "DUMP",
-    'ask' : "ASK"
+    'while': "WHILE",
+    'dump': "DUMP",
+    'ask': "ASK"
 }
 # declate rest of the tokens
 tokens = [
@@ -67,7 +67,6 @@ t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r".{1}=.+"
 
 
-
 def t_VARIABLE(t):
     r"\..{1}"
     if t.value in variables:
@@ -77,6 +76,8 @@ def t_VARIABLE(t):
         ERROR = True
 
 # Error function
+
+
 def t_error(t):
     global ERROR
     rich.print(
@@ -105,17 +106,21 @@ def p_start(t):
           | ask
     """
 
+
 def p_dump(t):
     """
     dump : DUMP
     """
     print(meta, variables, order)
 # Addition
+
+
 def p_add(t):
     """
     add : NUMBER ADD NUMBER
     """
     return t[1] + t[3]
+
 
 def p_add_var(t):
     """
@@ -125,11 +130,14 @@ def p_add_var(t):
     t.value = variables[t[1]] + t[3]
     return t
 # Subtraction
+
+
 def p_subtract(t):
   """
   subtract : NUMBER SUBTRACT NUMBER
   """
   return t[1] - t[3]
+
 
 def p_subtract_var(t):
     """
@@ -137,6 +145,8 @@ def p_subtract_var(t):
     """
     return variables[t[1]] - t[3]
 # Division
+
+
 def p_divide(t):
     """
     divide : DIVIDE
@@ -162,7 +172,7 @@ def p_vars_set(t):
     value = stripped[1]
     variables[name] = value
 
-    
+
 def p_vars_get(t):
     """
     vars : VARIABLE
@@ -174,6 +184,8 @@ def p_vars_get(t):
     return t.value
 
 # Input Statement
+
+
 def p_ask(t):
     """
     ask : ASK SPACE QTEXT
@@ -184,6 +196,8 @@ def p_ask(t):
     t.value = value
     return t
 # Multiplication
+
+
 def p_multiply(t):
     """
     multiply : MULTIPLY
@@ -206,6 +220,8 @@ def p_multiply(t):
             pass
 
 # Say/Print Statement
+
+
 def p_say_onlyText(t):
     """
     say : SAY QTEXT
@@ -230,6 +246,7 @@ def p_say_onlyText(t):
             to_print = str(i).strip('"')
             print(to_print)
 
+
 def p_say_onlyvar(t):
     """
     say : SAY SPACE VARIABLE
@@ -237,6 +254,8 @@ def p_say_onlyvar(t):
     print(variables[t[3]])
 
 # If Statement
+
+
 def p_if_num(t):
     """
     if : IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK
@@ -246,9 +265,9 @@ def p_if_num(t):
        | IF SPACE NUMBER LGT LEQUAL NUMBER SPACE STARTMARK
        
     """
-    
+
     if len(t) == 9:
-        if t[4] == "=" :
+        if t[4] == "=":
             if int(t[3]) == int(t[6]):
                 meta["lC"] = True
             else:
@@ -258,7 +277,7 @@ def p_if_num(t):
                 meta["lC"] = True
             else:
                 meta["lC"] = False
-        elif t[4] == "<" :
+        elif t[4] == "<":
             if int(t[3]) <= int(t[6]):
                 meta["lC"] = True
             else:
@@ -317,6 +336,7 @@ def p_if_var_r(t):
     order.append("if")
     meta["ifS"] = True
 
+
 def p_if_num_eng(t):
     """
     if : IF SPACE NUMBER SPACE SLEQUAL SPACE SLEQUAL SPACE NUMBER SPACE STARTMARK
@@ -332,7 +352,7 @@ def p_if_num_eng(t):
                 meta["lC"] = True
             else:
                 meta["lC"] = False
-        elif t[5] == ">" or t[5] =="greater_than":
+        elif t[5] == ">" or t[5] == "greater_than":
             if int(t[3]) >= int(t[9]):
                 meta["lC"] = True
             else:
@@ -357,7 +377,6 @@ def p_if_num_eng(t):
     meta["ifS"] = True
 
 
-
 def p_if_var_r_eng(t):
     """ 
     if : IF SPACE NUMBER SPACE SLGT SPACE VARIABLE SPACE STARTMARK
@@ -367,7 +386,7 @@ def p_if_var_r_eng(t):
        | IF SPACE NUMBER SPACE SLGT SPACE LEQUAL SPACE VARIABLE SPACE STARTMARK
     """
     a = 0
-    
+
     if len(t) == 9:
         if t[4] == "=":
             if int(t[3]) == int(variables(t[6])):
@@ -385,7 +404,7 @@ def p_if_var_r_eng(t):
             else:
                 meta["lC"] = False
     elif len(t) == 10:
-        
+
         if t[5] == "greater_than":
             if int(t[3]) > int(variables(t[7])):
                 meta["lC"] = True
@@ -399,6 +418,8 @@ def p_if_var_r_eng(t):
     meta["ifS"] = True
     order.append("if")
 # While Statement
+
+
 def p_while(t):
     """
     while : WHILE SPACE VARIABLE LLT NUMBER SPACE STARTMARK
@@ -419,8 +440,10 @@ def p_while(t):
             meta["WLC"] = True
         else:
             meta["WLC"] = False
-    
+
 # End of If or While Statement
+
+
 def p_endmark(t):
     """
     endmark : ENDMARK
@@ -447,13 +470,11 @@ def p_endmark(t):
                     a = False
     except:
         pass
-    
-<<<<<<< HEAD
-=======
 
->>>>>>> 390227ac228afd90d8a941d14afd91bae9bceb20
 
 # Error Statement
+
+
 def p_error(t):
     global ERROR
     ERROR = True
@@ -462,7 +483,7 @@ def p_error(t):
     print(f"Syntax Error: {t.value!r} ")
 
 
-parser = yacc.yacc(debug = False,write_tables=False)
+parser = yacc.yacc(debug=False, write_tables=False)
 
 
 if __name__ == "__main__":
