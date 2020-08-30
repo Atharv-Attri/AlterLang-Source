@@ -6,7 +6,6 @@
   <img src="https://github.com/Atharv-Attri/AlterLang-Source/blob/master/media/ALTER_WHITE.png?raw=true"/>
 </p>
 
-### *INSERT BADGES HERE*
 
 ### TL;DR
 Alter is a programming language that is for those new to programming, with its main feature being allowing the programmer to code in a English-like syntax, or programming syntax, or both at the same time!
