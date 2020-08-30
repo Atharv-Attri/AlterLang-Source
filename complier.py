@@ -3,31 +3,22 @@ import sys
 from ply import lex, yacc
 import rich
 import math
-# TODO: Variable, While loop, For loop, math, conversion
-# !Due:    12   ,     14    ,    14   ,  12
 
-# ?: Variable: regular syntax: a = 2, a = "say", a = true. ENG syntax: set a to 2
-# ?: Math: regular syntax: 1+1 = 2, a += 1. ENG syntax: add 1 to a, add a to b
-# TODO: ?: While loop: TODO
-# TODO: ?: For Loop
-
-# TODO: add reserved
+#keep track of if there were errors
 ERROR = False
+#declare reserved tokens
 reserved = {
     'say' : "SAY",
     'if': "IF",
     'while' : "WHILE",
     'dump' : "DUMP",
-    'ask' : "ASK",
-    'set' : "SET",
-    'to' : "TO"
+    'ask' : "ASK"
 }
-
+# declate rest of the tokens
 tokens = [
     'SUBTRACT',
     'ADD',
     'MULTIPLY',
-    'QUOTE',
     'SPACE',
     'EQUAL',
     'QTEXT',
@@ -43,15 +34,15 @@ tokens = [
     "STARTMARK",
     "ENDMARK",
 ] + list(reserved.values())
-
+# meta keeps track of the program (if, while)
 meta = {
 
 }
- 
+# variables keeps track of the varibles
 variables = {
 
 }
-
+# Defining the tokens
 order = []
 t_ASK = "ask"
 t_DUMP = "dump"
@@ -71,12 +62,10 @@ t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_IF = "if"
 t_WHILE = "while"
-t_QUOTE = r"\"" 
 t_SPACE = r"\s"
 t_QTEXT = r"\".+_ ?\""
 t_EQUAL = r".{1}=.+"
-t_SET = "set"
-t_TO = "to"
+
 
 
 def t_VARIABLE(t):
@@ -87,7 +76,7 @@ def t_VARIABLE(t):
         print("SYMBOL NOT FOUND")
         ERROR = True
 
-
+# Error function
 def t_error(t):
     global ERROR
     rich.print(
@@ -121,7 +110,7 @@ def p_dump(t):
     dump : DUMP
     """
     print(meta, variables, order)
-
+# Addition
 def p_add(t):
     """
     add : NUMBER ADD NUMBER
@@ -135,7 +124,7 @@ def p_add_var(t):
     variables[t[1]] = str(int(variables[t[1]]) + int(t[3]))
     t.value = variables[t[1]] + t[3]
     return t
-
+# Subtraction
 def p_subtract(t):
   """
   subtract : NUMBER SUBTRACT NUMBER
@@ -147,7 +136,7 @@ def p_subtract_var(t):
     subtract : VARIABLE SUBTRACT NUMBER
     """
     return variables[t[1]] - t[3]
-    
+# Division
 def p_divide(t):
     """
     divide : DIVIDE
@@ -184,7 +173,7 @@ def p_vars_get(t):
     t.value = variables[str(tmp)]
     return t.value
 
-
+# Input Statement
 def p_ask(t):
     """
     ask : ASK SPACE QTEXT
@@ -194,7 +183,7 @@ def p_ask(t):
     variables[".L"] = value
     t.value = value
     return t
-
+# Multiplication
 def p_multiply(t):
     """
     multiply : MULTIPLY
@@ -216,7 +205,7 @@ def p_multiply(t):
         except:
             pass
 
-
+# Say/Print Statement
 def p_say_onlyText(t):
     """
     say : SAY QTEXT
@@ -247,7 +236,7 @@ def p_say_onlyvar(t):
     """
     print(variables[t[3]])
 
-
+# If Statement
 def p_if_num(t):
     """
     if : IF SPACE NUMBER LEQUAL LEQUAL NUMBER SPACE STARTMARK
@@ -261,114 +250,72 @@ def p_if_num(t):
     if len(t) == 9:
         if t[4] == "=" :
             if int(t[3]) == int(t[6]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
         elif t[4] == ">":
             if int(t[3]) >= int(t[6]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
         elif t[4] == "<" :
             if int(t[3]) <= int(t[6]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
 
     if len(t) == 8:
         if t[4] == ">":
             if int(t[3]) > int(t[5]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
         elif t[4] == "<":
             if int(t[3]) < int(t[5]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
+    order.append("if")
+    meta["ifS"] = True
+
 
 def p_if_var_r(t):
     """ 
     if : IF SPACE NUMBER LGT VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LLT VARIABLE SPACE STARTMARK
-       | IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LLT LEQUAL VARIABLE SPACE STARTMARK
        | IF SPACE NUMBER LGT LEQUAL VARIABLE SPACE STARTMARK
+       | IF SPACE NUMBER LEQUAL VARIABLE SPACE STARTMARK
     """
-    
     if len(t) == 9:
         if t[4] == "=":
             if int(t[3]) == int(variables(t[6])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
         elif t[4] == ">":
             if int(t[3]) >= int(variables(t[6])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
         elif t[4] == "<":
             if int(t[3]) <= int(variables(t[6])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
     if len(t) == 8:
         if t[4] == ">":
             if int(t[3]) > int(variables[t[5]]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
         elif t[4] == "<":
             if int(t[3]) < int(variables[t[5]]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
+    order.append("if")
+    meta["ifS"] = True
 
 def p_if_num_eng(t):
     """
@@ -382,56 +329,34 @@ def p_if_num_eng(t):
     if len(t) == 12:
         if t[5] == "=" or t[5] == "equal_to":
             if int(t[3]) == int(t[9]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
         elif t[5] == ">" or t[5] =="greater_than":
             if int(t[3]) >= int(t[9]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
         elif t[5] == "<" or t[5] == "less_than":
             if int(t[3]) <= int(t[9]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
     if len(t) == 10:
         if t[5] == ">" or t[5] == "greater_than":
             if int(t[3]) > int(t[7]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
         elif t[5] == "<" or t[5] == "less_than":
             if int(t[3]) < int(t[7]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
-
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
+    order.append("if")
+    meta["ifS"] = True
+
+
 
 def p_if_var_r_eng(t):
     """ 
@@ -446,52 +371,34 @@ def p_if_var_r_eng(t):
     if len(t) == 9:
         if t[4] == "=":
             if int(t[3]) == int(variables(t[6])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = "." + False
-                order.append("if")
         elif t[4] == ">":
             if int(t[3]) >= int(variables(t[6])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
         elif t[4] == "<":
             if int(t[3]) <= int(variables(t[6])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
     elif len(t) == 10:
         
         if t[5] == "greater_than":
             if int(t[3]) > int(variables(t[7])):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
         elif t[5] == "less_than":
             if int(t[3]) < int(variables[t[7]]):
-                meta["ifS"] = True
                 meta["lC"] = True
-                order.append("if")
             else:
-                meta["ifS"] = True
                 meta["lC"] = False
-                order.append("if")
-
+    meta["ifS"] = True
+    order.append("if")
+# While Statement
 def p_while(t):
     """
     while : WHILE SPACE VARIABLE LLT NUMBER SPACE STARTMARK
@@ -513,7 +420,7 @@ def p_while(t):
         else:
             meta["WLC"] = False
     
-
+# End of If or While Statement
 def p_endmark(t):
     """
     endmark : ENDMARK
@@ -525,22 +432,24 @@ def p_endmark(t):
             order.remove("if")
     except:
         pass
-    
-    if order[-1] == "while":
-        if meta["WC"][2] == "<":
-            a = True
-            tmp = meta["WTD"]
-            if variables["." + meta["WC"][1]] < meta["WC"][3]:
-                for i in tmp:
-                    parser.parse(i)
-                    tmp[-1] = None
-            else:
-                meta["WTD"] = None
-                meta["WLC"] = False
-                a = False
+    try:
+        if order[-1] == "while":
+            if meta["WC"][2] == "<":
+                a = True
+                tmp = meta["WTD"]
+                if variables["." + meta["WC"][1]] < meta["WC"][3]:
+                    for i in tmp:
+                        parser.parse(i)
+                        tmp[-1] = None
+                else:
+                    meta["WTD"] = None
+                    meta["WLC"] = False
+                    a = False
+    except:
+        pass
     
 
-
+# Error Statement
 def p_error(t):
     global ERROR
     ERROR = True
@@ -553,7 +462,9 @@ parser = yacc.yacc(debug = False,write_tables=False)
 
 
 if __name__ == "__main__":
+    #print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
+    #load file and scan for errors, print out a custom message if there were errors
     try:
         with open(sys.argv[1], "r") as file:
             raw = file.readlines()
