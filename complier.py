@@ -509,3 +509,4 @@ if __name__ == "__main__":
     else:
         rich.print("[bold green]No Errors![/bold green]")
         rich.print("[bold blue]Program exited with code 0[/bold blue]")
+
