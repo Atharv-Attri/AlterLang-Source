@@ -33,6 +33,7 @@ tokens = [
     "SLLT",
     "STARTMARK",
     "ENDMARK",
+    "ANYTHINGM"
 ] + list(reserved.values())
 # meta keeps track of the program (if, while)
 meta = {
@@ -62,10 +63,10 @@ t_MULTIPLY = r"\w_ ?\*\w_ ?"
 t_SAY = "say"
 t_IF = "if"
 t_WHILE = "while"
-t_SPACE = r"\s"
-t_QTEXT = r"\".+_ ?\""
+t_SPACE = " _{1}"
+t_QTEXT = r"\".+_?\""
 t_EQUAL = r".{1}=.+"
-
+t_ANYTHINGM = r"[A-Za-z0-9]+"
 
 def t_VARIABLE(t):
     r"\..{1}"
@@ -86,7 +87,7 @@ def t_error(t):
     ERROR = True
 
 
-t_ignore = "\n\t"
+t_ignore = "\n"
 
 lexer = lex.lex()
 
@@ -163,14 +164,17 @@ def p_divide(t):
 
 def p_vars_set(t):
     """
-    vars : EQUAL
+    vars : ANYTHINGM LEQUAL ANYTHINGM
     """
-    name = "."
-    value = ""
-    stripped = str(t[1]).split("=")
-    name = name + stripped[0]
-    value = stripped[1]
-    variables[name] = value
+    print("KFSKHFKJSHFKJFHKJSH")
+    for i in t:
+        print(i)
+    #name = "."
+    #value=  ""
+    #stripped = str(t[1]).split("=")
+    #name = name + stripped[0]
+    #value = stripped[1]
+    #variables[name] = value
 
 
 def p_vars_get(t):
@@ -227,6 +231,8 @@ def p_say_onlyText(t):
     say : SAY QTEXT
         | SAY SPACE QTEXT
     """
+    for i in t:
+        print(i)
     try:
         if meta["ifS"] == True and meta["lC"] == False:
             return
@@ -495,10 +501,10 @@ if __name__ == "__main__":
             raw = file.readlines()
             for i in raw:
                 parser.parse(i)
-    except IndexError:
-        rich.print("[bold red]No File Specifed[/bold red]")
-        rich.print("[bold blue]Program exited with code 5[/bold blue]")
-        exit(5)
+    #except IndexError:
+    #    rich.print("[bold red]No File Specifed[/bold red]")
+    #    rich.print("[bold blue]Program exited with code 5[/bold blue]")
+    #    exit(5)
     except FileNotFoundError:
         rich.print("[bold red]File Not Found[/bold red]")
         rich.print("[bold blue]Program exited with code 5[/bold blue]")

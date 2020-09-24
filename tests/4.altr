@@ -1,5 +1,5 @@
 a=1
 while .a<3 ->
-say "h"
+say "hi"
 .a+1
 <-
