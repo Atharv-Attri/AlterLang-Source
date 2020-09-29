@@ -8,7 +8,9 @@ current_line = 0
 variables = {}
 
 def top_level(line):
-    if line.startswith("say"):
+    if line.startswith("#"):
+        return
+    elif line.startswith("say"):
         say(line)
     elif stringHelp.count("=", line) == 1 and stringHelp.position("=", line)[0] != 0:
         set_variable(line)
@@ -29,6 +31,17 @@ def say(line):
         except KeyError: raise Exception("Variable not found")
         return
 
+    #kavish's code goes here
+    if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0 and "," in line:
+        line = line.rstrip("\n")
+        line = line.lstrip("say")
+        line = line.lstrip(" ")
+        if helper.canConvert(line, list):
+            line = line.convert(line, "list")
+        for i in line:
+            try: print(variables[i], end = "")
+            except KeyError: raise Exception("Variable not found")
+        return
     if listed[3] == " " and listed[4] in quotes:
         start = 5
         quote_used = listed[4]

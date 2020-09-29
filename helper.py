@@ -17,6 +17,9 @@ def convert(item, type):
         return int(item)
     elif type == "bool":
         return bool(item)
+    elif type == "list":
+        return list(item)
+
 
 def canConvert(item, type):
     if type == "list":    
@@ -25,6 +28,18 @@ def canConvert(item, type):
             return True
         except ValueError:
             return False
-    if 
+    if type == "int":
+        try:
+            int(item)
+            return True
+        except ValueError:
+            return False
+    if type == "bool":    
+        try:
+            bool(item)
+            return True
+        except ValueError:
+            return False    
+
 
         

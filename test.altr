@@ -1,11 +1,11 @@
 say "All Hail Atharv"
 say 'All Hail Python'
-say "I'm Crazy!"
 
 a = 1
 b = "hello"
 c = False
 
-say a, b, c
+say a
 say b
-say c 
+say c
+#say a, b, c
