@@ -42,4 +42,4 @@ def canConvert(item, type):
             return False    
 
 
-        
+print(convert("a,b,c", "list"))     
