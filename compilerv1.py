@@ -29,7 +29,7 @@ def say(line):
         line = line.lstrip(" ")
         try: print(variables[line])
         except KeyError: raise Exception("Variable not found")
-        return
+        return line
 
     #kavish's code goes here
     if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0 and "," in line:
@@ -42,6 +42,7 @@ def say(line):
             try: print(variables[i], end = "")
             except KeyError: raise Exception("Variable not found")
         return
+        
     if listed[3] == " " and listed[4] in quotes:
         start = 5
         quote_used = listed[4]
