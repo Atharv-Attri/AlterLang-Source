@@ -8,4 +8,4 @@ c = False
 say a
 say b
 say c
-#say a, b, c
+say a, b, c

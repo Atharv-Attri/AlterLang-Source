@@ -23,6 +23,17 @@ def say(line):
     quotes = ["'", '"']
     quote_used = ""
 
+    if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0 and "," in line:
+        line = line.rstrip("\n")
+        line = line.lstrip("say")
+        line = line.replace(" ", "")
+        line = line.split(',')
+        for i in line:
+            try: print(variables[i], end = " ")
+            except KeyError: raise Exception("Variable not found")
+        print("\n", end = "")
+        return
+
     if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0:
         line = line.rstrip("\n")
         line = line.lstrip("say")
@@ -32,17 +43,8 @@ def say(line):
         return line
 
     #kavish's code goes here
-    if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0 and "," in line:
-        line = line.rstrip("\n")
-        line = line.lstrip("say")
-        line = line.lstrip(" ")
-        if helper.canConvert(line, list):
-            line = line.convert(line, "list")
-        for i in line:
-            try: print(variables[i], end = "")
-            except KeyError: raise Exception("Variable not found")
-        return
-        
+    
+    
     if listed[3] == " " and listed[4] in quotes:
         start = 5
         quote_used = listed[4]
