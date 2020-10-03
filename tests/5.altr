@@ -1,7 +1,0 @@
-ask "Guess the number between 1-10: "
-if 7<.L ->
-say "Too High"
-<-
-if 7>.L ->
-say "Too Low"
-<-
