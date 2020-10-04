@@ -16,7 +16,11 @@ def convert(item, type):
     elif type == "int":
         return int(item)
     elif type == "bool":
-        return bool(item)
+        if item.lower() == "false":
+            return False
+        elif item.lower() == "true":
+            return True
+        else: return None
     elif type == "list":
         return list(item)
 
@@ -42,4 +46,4 @@ def canConvert(item, type):
             return False    
 
 
-print(convert("a,b,c", "list"))     
+print(convert("False", "bool"))     

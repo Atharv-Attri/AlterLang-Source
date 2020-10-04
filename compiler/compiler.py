@@ -1,7 +1,10 @@
 import sys
 import rich
 
-import stringHelp, helper
+try:
+    from . import stringHelp, helper
+except ImportError:
+    import stringHelp, helper
 
 current_line = 0
 variables = {}
@@ -43,7 +46,7 @@ def say(line):
         line = line.lstrip(" ")
         try: print(variables[line])
         except KeyError: raise Exception("Variable not found")
-        return line
+        return variables[line]
 
     #kavish's code goes here
     else:
