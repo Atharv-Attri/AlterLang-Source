@@ -1,0 +1,11 @@
+say "All Hail Atharv"
+say 'All Hail Python'
+
+a = 1
+b = "hello"
+c = False
+
+say a
+say b
+say c
+say a, b, c
