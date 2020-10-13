@@ -9,3 +9,6 @@ def test_say_var():
     assert compiler.main("tests/altr_files/5say_var.altr") == ["hello", "hello"]
 def test_say_multivar():
     assert compiler.main("tests/altr_files/6say_multivar.altr") == [1,2, "hello", "1 2 hello \n"]
+
+def test_say_groups():
+    assert compiler.main("tests/altr_files/7say_groups.altr") == [4, "Alter", "hello, Alter, goodbye 4"]

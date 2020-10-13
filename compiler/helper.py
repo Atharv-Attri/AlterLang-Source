@@ -46,4 +46,3 @@ def canConvert(item, type):
             return False    
 
 
-print(convert("False", "bool"))     
