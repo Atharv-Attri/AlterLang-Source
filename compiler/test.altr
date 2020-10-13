@@ -1,0 +1,4 @@
+a = 4
+c = "FDKJFH"
+
+say "hello, " + c + " goodbye"

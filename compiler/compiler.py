@@ -2,9 +2,9 @@ import sys
 import rich
 
 try:
-    from . import stringHelp, helper
+    from . import stringUtil, helper
 except ImportError:
-    import stringHelp, helper
+    import stringUtil, helper
 
 current_line = 0
 variables = {}
@@ -14,7 +14,7 @@ def top_level(line):
         return
     elif line.startswith("say"):
         return say(line)
-    elif stringHelp.count("=", line) == 1 and stringHelp.position("=", line)[0] != 0:
+    elif stringUtil.count("=", line) == 1 and stringUtil.position("=", line)[0] != 0:
         return set_variable(line)
 
 
@@ -25,7 +25,28 @@ def say(line):
     quotes = ["'", '"']
     quote_used = ""
 
-    if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0 and "," in line:
+    if len(stringUtil.groups(line, '"', "+")) > 1:
+        groups = stringUtil.groups(line, '"', "+")
+        out = ""
+        for i in groups:
+            i = i.strip(" ")
+            if i.startswith('say'):
+                i = i.lstrip('say "')
+                i = i.rstrip('"')
+                print(i, end = "")
+                out += str(i)
+            elif i.startswith('"'):
+                i = i.strip('"')
+                print(i, end = "")
+                out += str(i)
+            else:
+                try: 
+                    print(variables[i], end = "")
+                    out += str(variables[i])
+                except KeyError: raise Exception("Variable not found")
+        print("")
+        return out
+    elif stringUtil.count("'", line) == 0 and stringUtil.count('"', line) == 0 and "," in line:
         line = line.rstrip("\n")
         line = line.lstrip("say")
         line = line.replace(" ", "")
@@ -40,7 +61,7 @@ def say(line):
         full_out += "\n"
         return full_out
 
-    if stringHelp.count("'", line) == 0 and stringHelp.count('"', line) == 0:
+    elif stringUtil.count("'", line) == 0 and stringUtil.count('"', line) == 0:
         line = line.rstrip("\n")
         line = line.lstrip("say")
         line = line.lstrip(" ")

@@ -30,4 +30,5 @@ def groups(text, grouper, seperator):
         else:
             tmp += i
     groups.append(tmp)
+    return groups
 
