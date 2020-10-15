@@ -12,3 +12,7 @@ def test_say_multivar():
 
 def test_say_groups():
     assert compiler.main("tests/altr_files/7say_groups.altr") == [4, "Alter", "hello, Alter, goodbye 4"]
+
+def test_input_string(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda _: "Alter")
+    assert compiler.main("tests/altr_files/9say_input.altr") == ["Alter", "Alter"]

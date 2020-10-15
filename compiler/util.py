@@ -45,4 +45,20 @@ def canConvert(item, type):
         except ValueError:
             return False    
 
-
+def auto_convert(item):
+    if item.lower() == "true":
+        return True
+    elif item.lower() == "false":
+        return False
+    else:
+        try:
+            item = int(item)
+            return item
+        except:
+            pass
+        try:
+            item = float(item)
+            return item
+        except:
+            pass
+    return item

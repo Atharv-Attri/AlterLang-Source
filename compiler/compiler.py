@@ -2,13 +2,18 @@ import sys
 import rich
 
 try:
-    from . import stringUtil, helper
+    from . import stringUtil, util
 except ImportError:
-    import stringUtil, helper
+    import stringUtil, util
 
 current_line = 0
 variables = {}
 
+# ! clean up code, maintainablity is like D- or something
+# TODO: Make tests
+# ? add type purification
+# ? think about using layer levels
+# ? reduce code reuse
 def top_level(line):
     if line.startswith("#"):
         return
@@ -92,19 +97,30 @@ def set_variable(line):
     name = ""
     value = ""
     equal = False
-    for i in line:
-        if i == "=":
-            equal = True
-            continue
-        if equal == False:
-            name += i
-        else:
-            value += i
-    name = name.strip(" ")
-    value = value.lstrip((" "))
-    value = helper.convert(value,helper.datatype(value))
-    variables[name] = value
-    return variables[name]
+    if "ask" in line or "get" in line:
+        line = line.replace("ask", "")
+        line = line.replace("get", "")
+        line = line.split("=")
+        for x,i in enumerate(line):
+            line[x] = i.strip(" ")
+        in_data = input(line[1].strip('"'))
+        in_data = util.auto_convert(in_data)
+        variables[line[0]] = in_data
+        return in_data
+    else:
+        for i in line:
+            if i == "=":
+                equal = True
+                continue
+            if equal == False:
+                name += i
+            else:
+                value += i
+        name = name.strip(" ")
+        value = value.lstrip((" "))
+        value = util.convert(value,util.datatype(value))
+        variables[name] = value
+        return variables[name]
 
 def main(filename):
     global current_line
