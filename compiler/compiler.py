@@ -14,16 +14,26 @@ variables = {}
 # ? add type purification
 # ? think about using layer levels
 # ? reduce code reuse
-def top_level(line):
+
+
+def top_level(line: str):
     if line.startswith("#"):
-        return
+        return 0
     elif line.startswith("say"):
         return say(line)
     elif stringUtil.count("=", line) == 1 and stringUtil.position("=", line)[0] != 0:
         return set_variable(line)
+    elif line.startswith("\t") or line.startswith(" "):
+        return tab_dealer(line)
 
 
-def say(line):
+def say(line: str) -> str:
+    '''
+    Parameters:
+        :param line: string of line that needs to be processed
+    Return:
+        str - text that was printed
+    '''
     listed = list(line)
     out = ""
     start = None
@@ -122,10 +132,16 @@ def set_variable(line):
         variables[name] = value
         return variables[name]
 
+
+def tab_dealer(line):
+    pass
+
 def main(filename):
     global current_line
     #print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
+    if str(filename).endswith(".altr") == False:
+        raise Exception("File must end with .altr")
     #load file and scan for errors, print out a custom message if there were errors
     lines = []
     with open(filename, "r") as file:
@@ -145,3 +161,5 @@ def main(filename):
 
 if __name__ == "__main__":
     main(sys.argv[1])
+
+say()

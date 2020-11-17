@@ -62,3 +62,13 @@ def auto_convert(item):
         except:
             pass
     return item
+
+def condition(conditional):
+    # v = True/False
+    # v [<,>,=,<=,>=] 
+    return None
+
+def get_condition(text: str):
+    if text.startswith("if"):
+        pass
+    return None

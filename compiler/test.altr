@@ -1,3 +1,2 @@
-name = ask "what is your name?: "
-age = get "What is your age: "
-say "My name is "+ name + ", and my age is " + age
+if whatever:
+    whatever

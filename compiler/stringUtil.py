@@ -1,4 +1,3 @@
-
 def count(item, group) -> int:
     count = 0
     for i in group:
@@ -31,4 +30,12 @@ def groups(text, grouper, seperator):
             tmp += i
     groups.append(tmp)
     return groups
+
+#! !!!work on here!!!
+def remove_tabs(item):
+	if item[0]==("\t"):
+		item = item.strip("\t")
+	elif item[0]==(" "):
+		item = item.strip(" ")
+
 
