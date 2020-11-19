@@ -17,6 +17,9 @@ variables = {}
 
 
 def top_level(line: str):
+    '''
+    Choses what to send the line to
+    '''
     if line.startswith("#"):
         return 0
     elif line.startswith("say"):
@@ -162,4 +165,3 @@ def main(filename):
 if __name__ == "__main__":
     main(sys.argv[1])
 
-say()
