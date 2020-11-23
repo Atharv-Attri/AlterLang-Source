@@ -15,13 +15,13 @@ def position(item, group) -> list:
 
 
 def groups(text, grouper, seperator: str) -> str:
-  '''
-  Parameters:
-    :param text, grouper, seperator: strings
-  Return:
-    type - string
-  '''
-  # Not too sure what it does
+    '''
+    Parameters:
+        :param text, grouper, seperator: strings
+    Return:
+        type - string
+    '''
+    # Not too sure what it does
     started = False
     groups = []
     tmp = ""
