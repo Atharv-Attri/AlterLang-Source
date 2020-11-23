@@ -8,7 +8,9 @@ except ImportError:
 
 current_line = 0
 variables = {}
-
+order = []
+tabnum = -1
+count_tabs = False
 # ! clean up code, maintainablity is like D- or something
 # TODO: Make tests
 # ? add type purification
@@ -16,19 +18,29 @@ variables = {}
 # ? reduce code reuse
 
 
-def top_level(line: str):
+def top_level(line: str, stripped=False):
     '''
     Choses what to send the line to
     '''
+    global count_tabs, tabnum, order
+    #print("PRECHECK: ", order, line.count("    "), line, "S: ", stripped)
+    #print(line.startswith("if"))
+    if count_tabs is True and stripped is False:
+        order = []
+        count_tabs = False
     if line.startswith("#"):
-        return 0
+        return "#ignore"
     elif line.startswith("say"):
         return say(line)
+    elif line.startswith("if"):
+        #print("IFFFF")
+        if_statement(line)
     elif stringUtil.count("=", line) == 1 and stringUtil.position("=", line)[0] != 0:
         return set_variable(line)
     elif line.startswith("\t") or line.startswith(" "):
+        count_tabs = True
         return tab_dealer(line)
-
+    
 
 def say(line: str) -> str:
     '''
@@ -83,11 +95,13 @@ def say(line: str) -> str:
         line = line.rstrip("\n")
         line = line.lstrip("say")
         line = line.lstrip(" ")
-        try: print(variables[line])
-        except KeyError: raise Exception("Variable not found")
+        try:
+            print(variables[line])
+        except KeyError:
+            raise Exception("Variable not found")
         return variables[line]
 
-    #kavish's code goes here
+    # kavish's code goes here
     else:
         if listed[3] == " " and listed[4] in quotes:
             start = 5
@@ -138,21 +152,39 @@ def set_variable(line: str) -> str:
                 value += i
         name = name.strip(" ")
         value = value.lstrip((" "))
-        value = util.convert(value,util.datatype(value))
+        value = util.convert(value, util.datatype(value))
         variables[name] = value
         return variables[name]
 
 
 def tab_dealer(line):
-    pass
+    global order, tabnum
+    #print(order)
+    current = order[line.count("    ") - 1]
+    if current[0] == "if":
+        if current[1] is True:
+            line = stringUtil.remove_tabs(line)
+            #print("LINE: ", line)
+            return top_level(line, stripped=True)
+
+
+def if_statement(line):
+    global variables, tabnum
+    #print(variables)
+    line = util.sanitize(line)
+    condition = util.condition(line, variables)
+    order.append(["if", condition])
+    #print(order)
+    tabnum += 1
+
 
 def main(filename):
     global current_line
-    #print the intro
+    # print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
     if str(filename).endswith(".altr") == False:
         raise Exception("File must end with .altr")
-    #load file and scan for errors, print out a custom message if there were errors
+    # load file and scan for errors, print out a custom message if there were errors
     lines = []
     with open(filename, "r") as file:
         raw = file.readlines()
@@ -162,13 +194,13 @@ def main(filename):
     out = []
     for i in lines:
         line_out = top_level(i)
-        if line_out != None:
+        if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)
-    print(lines, variables, sep="\n")
+    print(lines, variables, order, sep="\n")
     rich.print("[bold green]No Errors![/bold green]")
     rich.print("[bold blue]Program exited with code 0[/bold blue]")
     return out
 
+
 if __name__ == "__main__":
     main(sys.argv[1])
-

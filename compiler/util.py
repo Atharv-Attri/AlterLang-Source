@@ -1,13 +1,19 @@
+comparables = ["==", "=>", "<=", ">=", "=<",  ">", "<", "True", "true", "False",
+               "false"]
 
-comparables = [">","<", "==", "=>", "<=", ">=", "=<"]
 
 def datatype(item):
     if "'" in item or '"' in item:
         return "str"
     elif item.lower() in ["false", "true"]:
         return "bool"
-    elif item.isdigit():
-        return "int"
+    else:
+        try:
+            int(item)
+            return "int"
+        except ValueError:
+            return None
+
 
 def convert(item, type):
     if type == "str":
@@ -23,7 +29,8 @@ def convert(item, type):
             return False
         elif item.lower() == "true":
             return True
-        else: return None
+        else:
+            return None
     elif type == "list":
         return list(item)
 
@@ -46,7 +53,8 @@ def canConvert(item, type):
             bool(item)
             return True
         except ValueError:
-            return False    
+            return False
+
 
 def auto_convert(item):
     if item.lower() == "true":
@@ -57,24 +65,26 @@ def auto_convert(item):
         try:
             item = int(item)
             return item
-        except:
+        except ValueError:
             pass
         try:
             item = float(item)
             return item
-        except:
+        except ValueError:
             pass
     return item
 
+
 def condition(conditional, varlist):
     # v = True/False
-    # v [<,>,=,<=,>=] 
+    # v [<,>,=,<=,>=]
     condition = get_condition(conditional, varlist)
+    # print(condition)
     if condition[1] == "<":
         return condition[0] < condition[2]
     elif condition[1] == ">":
         return condition[0] > condition[2]
-    elif condition[1] == "=":
+    elif condition[1] == "==":
         return condition[0] == condition[2]
     elif condition[1] == ">=":
         return condition[0] >= condition[2]
@@ -84,6 +94,11 @@ def condition(conditional, varlist):
         return condition[0] <= condition[2]
     elif condition[1] == "=>":
         return condition[0] >= condition[2]
+    elif condition[1] in ["True", "true"]:
+        return True
+    elif condition[1] in ["False", "false"]:
+        return False
+
 
 def get_condition(text, varlist):
     global comparables
@@ -103,6 +118,7 @@ def get_condition(text, varlist):
         text.insert(1, comp)
         return text
 
+
 def find_comprable(text: str) -> str:
     global comparables
     for i in comparables:
@@ -110,4 +126,8 @@ def find_comprable(text: str) -> str:
             return str(i)
     return "Nah"
 
-print(condition("if a < 100 ->", {"a": 24}))
+
+def sanitize(line: str):
+    line = line.rstrip("\n")
+    line = line.rstrip("\r")
+    return line
