@@ -119,7 +119,14 @@ def say(line: str) -> str:
         return out
 
 
-def set_variable(line):
+def set_variable(line: str) -> str:
+    '''
+  Parameters:
+    :param line: string
+  Return:
+    string - variable
+  '''
+  # The code for making variables
     line = line.replace("\n", "")
     name = ""
     value = ""
