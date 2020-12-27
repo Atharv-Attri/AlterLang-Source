@@ -37,7 +37,7 @@ def var(outlines, outfile):
                 name.insert(random.randint(0, len(name)), "_")
             name = "".join(name)
         names.append(name)
-    with open("./var/names.txt", "a") as f:
+    with open("./variables/names.txt", "a") as f:
         for i in names:
             f.write(i + "\t 1\n")
 
