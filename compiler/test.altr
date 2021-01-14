@@ -1,38 +1,4 @@
-a = 5
-b = 44
-c = 0
-d = -9
-
-#say 1 means it should print
-#say 0 means it should not
-
-if a < 1 ->
-    say "0"
-if c <= 0 ->
-    say "1"
-if b > d ->
-    say "1"
-if c < a ->
-    say "1"
-if d <= b ->
-    say "1"
-if a > 38 ->
-    say "0"
-if 5 < 8 ->
-    say "1"
-if 44 < a ->
-    say "1"
-if b > 1050 ->
-    say "0"
-if -9 > 609807 ->
-    say "0"
-if d < 84949 ->
-    say "1"
-if d > a ->
-    say "0"
-if -9 == d ->
-    say "1"
-if a ==  6 ->
-    say "0"
-if c == 0 ->
-    say "1"
+x = 5
+y = x + 4
+dump
+say x, y

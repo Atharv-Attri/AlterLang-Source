@@ -30,6 +30,8 @@ def top_level(line: str, stripped=False):
         count_tabs = False
     if line.startswith("#"):
         return "#ignore"
+    if line.startswith("dump"):
+        dump()
     elif line.startswith("say"):
         return say(line)
     elif line.startswith("if"):
@@ -40,7 +42,7 @@ def top_level(line: str, stripped=False):
     elif line.startswith("\t") or line.startswith(" "):
         count_tabs = True
         return tab_dealer(line)
-    
+
 
 def say(line: str) -> str:
     '''
@@ -126,6 +128,7 @@ def set_variable(line: str) -> str:
   Return:
     string - variable
   '''
+    global variables
   # The code for making variables
     line = line.replace("\n", "")
     name = ""
@@ -142,6 +145,13 @@ def set_variable(line: str) -> str:
         variables[line[0]] = in_data
         return in_data
     else:
+        for i in util.mathopers:
+            if i in line and util.varmathcheck(line):
+                mathout = util.dovarmath(line, variables)
+                print(mathout[1])
+                variables[mathout[0]] = mathout[1]
+                print(variables)
+                return variables[mathout[0]]
         for i in line:
             if i == "=":
                 equal = True
@@ -155,7 +165,8 @@ def set_variable(line: str) -> str:
         value = util.convert(value, util.datatype(value))
         variables[name] = value
         return variables[name]
-
+    
+         
 
 def tab_dealer(line):
     global order, tabnum
@@ -176,6 +187,10 @@ def if_statement(line):
     order.append(["if", condition])
     #print(order)
     tabnum += 1
+
+
+def dump() -> None:
+    print("==================DUMP=======================",variables,current_line,order, "==================DUMP=======================",sep="\n")
 
 
 def main(filename):
