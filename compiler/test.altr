@@ -1,3 +1,13 @@
+#a = 5
+#
+#while a > 1 ->
+#    say a
+#    a -= 1
+#    if a > 3 ->
+#        say a + "is less than 3"
+#<-
+say "hello"
+say"I'm a fish"
 x = 5
 dump
 while x < 10 ->

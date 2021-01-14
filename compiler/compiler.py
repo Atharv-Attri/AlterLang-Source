@@ -1,10 +1,11 @@
 import sys
+import re
 import rich
 
 try:
-    from . import stringUtil, util
+    from . import util
 except ImportError:
-    import stringUtil, util
+    import util
 
 current_line = 0
 variables = {}
@@ -19,15 +20,14 @@ count_tabs = False
 
 
 def top_level(line: str, stripped=False):
-    '''
+    """
     Choses what to send the line to
-    '''
+    """
     global count_tabs, tabnum, order
-    #print("PRECHECK: ", order, line.count("    "), line, "S: ", stripped)
-    #print(line.startswith("if"))
     if count_tabs is True and stripped is False:
         order = []
         count_tabs = False
+    # print(order)
     if line.startswith("#"):
         return "#ignore"
     if line.startswith("dump"):
@@ -35,65 +35,94 @@ def top_level(line: str, stripped=False):
     elif line.startswith("say"):
         return say(line)
     elif line.startswith("if"):
-        #print("IFFFF")
         if_statement(line)
-    elif stringUtil.count("=", line) == 1 and stringUtil.position("=", line)[0] != 0:
-        return set_variable(line)
+    elif line.startswith("while"):
+        while_loop(line)
+    elif line.startswith("<-"):
+        end_arrow()
     elif line.startswith("\t") or line.startswith(" "):
+        if order[-1][0] != "while":
+            count_tabs = True
+        tor = tab_dealer(line)
+        return tor
+    elif util.var_math_check(line) is True:
+        return var_math(line)
+    elif util.count("=", line) == 1 and util.position("=", line)[0] != 0:
+        return set_variable(line)
+
+
+def end_arrow():
+    global order, variables
+    index = -1
+    current = order[index]
+    while current[0] != "while":
+        index -= 1
+        current = order[index]
+    tabs = str(current[1]).count("    ")
+    while util.condition(current[1], variables) is not False:
+        remove = 0
+        for i in current[2]:
+            i = str(i).lstrip("    ")
+            # print(i)
+            top_level(i)
+            if i.startswith("if"):
+                remove += 1
+        for i in range(remove):
+            order.pop(-1)
         count_tabs = True
         return tab_dealer(line)
 
-
 def say(line: str) -> str:
-    '''
+    """
     Parameters:
         :param line: string of line that needs to be processed
     Return:
         str - text that was printed
-    '''
+    """
     listed = list(line)
     out = ""
     start = None
     quotes = ["'", '"']
     quote_used = ""
-
-    if len(stringUtil.groups(line, '"', "+")) > 1:
-        groups = stringUtil.groups(line, '"', "+")
+    if len(util.groups(line, '"', "+")) > 1:
+        groups = util.groups(line, '"', "+")
         out = ""
         for i in groups:
             i = i.strip(" ")
-            if i.startswith('say'):
+            if i.startswith("say"):
                 i = i.lstrip('say "')
                 i = i.rstrip('"')
-                print(i, end = "")
+                print(i, end="")
                 out += str(i)
             elif i.startswith('"'):
                 i = i.strip('"')
-                print(i, end = "")
+                print(i, end="")
                 out += str(i)
             else:
-                try: 
-                    print(variables[i], end = "")
+                try:
+                    print(variables[i], end="")
                     out += str(variables[i])
-                except KeyError: raise Exception("Variable not found")
+                except KeyError:
+                    raise Exception("Variable not found")
         print("")
         return out
-    elif stringUtil.count("'", line) == 0 and stringUtil.count('"', line) == 0 and "," in line:
+    elif util.count("'", line) == 0 and util.count('"', line) == 0 and "," in line:
         line = line.rstrip("\n")
         line = line.lstrip("say")
         line = line.replace(" ", "")
-        line = line.split(',')
+        line = line.split(",")
         full_out = ""
         for i in line:
-            try: 
-                print(variables[i], end = " ")
+            try:
+                print(variables[i], end=" ")
                 full_out += str(variables[i]) + " "
-            except KeyError: raise Exception("Variable not found")
-        print("\n", end = "")
+            except KeyError:
+                raise Exception("Variable not found")
+        print("\n", end="")
         full_out += "\n"
         return full_out
 
-    elif stringUtil.count("'", line) == 0 and stringUtil.count('"', line) == 0:
+    elif util.count("'", line) == 0 and util.count('"', line) == 0:
         line = line.rstrip("\n")
         line = line.lstrip("say")
         line = line.lstrip(" ")
@@ -105,31 +134,25 @@ def say(line: str) -> str:
 
     # kavish's code goes here
     else:
-        if listed[3] == " " and listed[4] in quotes:
-            start = 5
-            quote_used = listed[4]
-        elif listed[3] in quotes:
-            quote_used = listed[3]
-            start = 4        
-        if start == None:
-            raise Exception(f"Error on line: {line}\nInvalid syntax for say statement. Did you add too many spaces or forget quotes?")
-        for i in listed[start:]:
-            if i in quote_used:
-                break
-            out += i
-        print(out)
-        return out
+        to_say = list(re.findall(r"say[ ]*?['\"](.+)['\"]", line))
+        if len(to_say) > 0:
+            print(to_say[0])
+        else:
+            raise Exception(
+                f"Error on line: {line}\nInvalid syntax for say statement. Did you add too many spaces or forget quotes?"
+            )
+
+        return to_say[0]
 
 
 def set_variable(line: str) -> str:
-    '''
-  Parameters:
-    :param line: string
-  Return:
-    string - variable
-  '''
-    global variables
-  # The code for making variables
+    """
+    Parameters:
+        :param line: string
+    Return:
+        string - variable
+    """
+    # The code for making variables
     line = line.replace("\n", "")
     name = ""
     value = ""
@@ -138,7 +161,7 @@ def set_variable(line: str) -> str:
         line = line.replace("ask", "")
         line = line.replace("get", "")
         line = line.split("=")
-        for x,i in enumerate(line):
+        for x, i in enumerate(line):
             line[x] = i.strip(" ")
         in_data = input(line[1].strip('"'))
         in_data = util.auto_convert(in_data)
@@ -156,40 +179,67 @@ def set_variable(line: str) -> str:
             if i == "=":
                 equal = True
                 continue
-            if equal == False:
+            if equal is False:
                 name += i
             else:
                 value += i
         name = name.strip(" ")
         value = value.lstrip((" "))
-        value = util.convert(value, util.datatype(value))
+        value = util.auto_convert(value)
         variables[name] = value
         return variables[name]
     
          
 
 def tab_dealer(line):
-    global order, tabnum
-    #print(order)
-    dump(line)
-    current = order[line.count("    ") - 1]
+    global order, tabnum, variables
+    # print(order, line)
+    try:
+        current = order[line.count("    ") - 1]
+    except IndexError:
+        current = order[-1]
     if current[0] == "if":
         if current[1] is True:
-            line = stringUtil.remove_tabs(line)
-            #print("LINE: ", line)
+            line = util.remove_tabs(line)
             return top_level(line, stripped=True)
+    if current[0] == "while":
+        try:
+            order[line.count("    ") - 1][2].append(line)
+        except IndexError:
+            order[-1][2].append(line)
 
 
 def if_statement(line):
     global variables, tabnum
-    #print(variables)
     line = util.sanitize(line)
     condition = util.condition(line, variables)
     order.append(["if", condition])
-    #print(order)
     tabnum += 1
 
 
+def var_math(line):
+    global variables
+    line = util.sanitize(line)
+    line = util.split_var_math(line)
+    varname = line[0]
+    try:
+        line[2] = variables[line[2]]
+    except KeyError:
+        pass
+    line[0] = variables[line[0]]
+    try:
+        value = util.var_math(line)
+    except TypeError:
+        raise Exception("INVALID OPERATION")
+    variables[varname] = value
+    return value
+
+
+def while_loop(line):
+    global variables, order
+    line = util.sanitize(line)
+    new_order = ["while", line, []]
+    order.append(new_order)
 def dump(line="Content not passed") -> None:
     print("==================DUMP=======================","Variables: "+str(variables),"Line: "+str(current_line),"Order: "+str(order), "Content: "+line,"==================DUMP=======================",sep="\n")
 
@@ -198,9 +248,9 @@ def main(filename):
     global current_line
     # print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
-    if str(filename).endswith(".altr") == False:
+    if str(filename).endswith(".altr") is False:
         raise Exception("File must end with .altr")
-    # load file and scan for errors, print out a custom message if there were errors
+    # load file and scan for errors, print out a custom message if were errs
     lines = []
     with open(filename, "r") as file:
         raw = file.read().split("\n")
@@ -219,4 +269,6 @@ def main(filename):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        sys.argv.append("test.altr")
     main(sys.argv[1])
