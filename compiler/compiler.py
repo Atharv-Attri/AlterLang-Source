@@ -30,6 +30,8 @@ def top_level(line: str, stripped=False):
     # print(order)
     if line.startswith("#"):
         return "#ignore"
+    if line.startswith("dump"):
+        dump()
     elif line.startswith("say"):
         return say(line)
     elif line.startswith("if"):
@@ -67,7 +69,8 @@ def end_arrow():
                 remove += 1
         for i in range(remove):
             order.pop(-1)
-
+        count_tabs = True
+        return tab_dealer(line)
 
 def say(line: str) -> str:
     """
@@ -165,6 +168,13 @@ def set_variable(line: str) -> str:
         variables[line[0]] = in_data
         return in_data
     else:
+        for i in util.mathopers:
+            if i in line and util.varmathcheck(line):
+                mathout = util.dovarmath(line, variables)
+                print(mathout[1])
+                variables[mathout[0]] = mathout[1]
+                print(variables)
+                return variables[mathout[0]]
         for i in line:
             if i == "=":
                 equal = True
@@ -178,7 +188,8 @@ def set_variable(line: str) -> str:
         value = util.auto_convert(value)
         variables[name] = value
         return variables[name]
-
+    
+         
 
 def tab_dealer(line):
     global order, tabnum, variables
@@ -229,6 +240,8 @@ def while_loop(line):
     line = util.sanitize(line)
     new_order = ["while", line, []]
     order.append(new_order)
+def dump(line="Content not passed") -> None:
+    print("==================DUMP=======================","Variables: "+str(variables),"Line: "+str(current_line),"Order: "+str(order), "Content: "+line,"==================DUMP=======================",sep="\n")
 
 
 def main(filename):
@@ -240,12 +253,12 @@ def main(filename):
     # load file and scan for errors, print out a custom message if were errs
     lines = []
     with open(filename, "r") as file:
-        raw = file.readlines()
+        raw = file.read().split("\n")
         for i in raw:
             lines.append(i)
-            current_line += 1
     out = []
     for i in lines:
+        current_line += 1
         line_out = top_level(i)
         if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)

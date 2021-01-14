@@ -1,7 +1,11 @@
 comparables = ["==", "=>", "<=", ">=", "=<", ">", "<", "True", "true", "False", "false"]
 
 variable_math_operators = ["+=", "-=", "=+", "=-", "/=", "=/", "*=", "=*"]
+import re
+comparables = ["==", "=>", "<=", ">=", "=<",  ">", "<", "True", "true", "False",
+               "false","%"]
 
+mathopers = ["+", "-", "*", "%", "^", "**"]
 
 def datatype(item):
     if "'" in item or '"' in item:
@@ -97,6 +101,11 @@ def condition(conditional, varlist):
         return condition[0] <= condition[2]
     elif condition[1] == "=>":
         return condition[0] >= condition[2]
+    elif condition[1] == "%":
+        if condition[0] % condition[2] == 0:
+            return True
+        else: 
+            return False
     elif condition[1] in ["True", "true"]:
         return True
     elif condition[1] in ["False", "false"]:
@@ -234,3 +243,34 @@ def remove_num(text, item, num):
             for i in text:
                 textc += i
     return textc
+def varmathcheck(line: str):
+    if re.search(r"\S+ ?= ?\S+ ?[\+\-\*\^\/] ?\S+", line):
+        return True
+
+
+def dovarmath(line: str, varlist: dict):
+    values = getVarMathValues(line)
+    print(line,varlist)
+    if values["values"][0] in varlist:
+        values["values"][0] = varlist[values["values"][0]]
+    if values["values"][1] in varlist:
+        values["values"][1] = varlist[values["values"][1]]
+    print("VAL",values)
+    newValue = doMath(values["values"], values["oper"])
+    return [values["name"], newValue]
+
+
+def doMath(values: list, oper: str):
+    return eval(f"values[0]{oper}values[1]")
+
+
+def getVarMathValues(line: str) -> dict:
+    revalues = list(re.findall(r"(\S+) ?= ?(\S+) ?([\+\-\*\^\/]) ?(\S+)", line))[0]
+    values = {}
+    values["name"], values["values"], values["oper"] = revalues[0], [revalues[1], revalues[3]], revalues[2]
+    values["values"] = [auto_convert(i) for i in values["values"]]
+    if values["oper"] == "^":
+        values["oper"] = "**"
+    return values
+
+print(dovarmath("y = x + 4",{"x":5}))

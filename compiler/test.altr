@@ -8,3 +8,11 @@
 #<-
 say "hello"
 say"I'm a fish"
+x = 5
+dump
+while x < 10 ->
+    dump
+    if x % 2 ->
+        say "hi"
+    say x
+    x = x + 1

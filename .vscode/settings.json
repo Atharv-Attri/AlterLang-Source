@@ -13,4 +13,5 @@
         "**/site-packages/**/*.py",
         "**/pastcompiler.py"
     ]
+    "editor.autoSave": "on"
 }
