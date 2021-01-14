@@ -1,4 +1,8 @@
 x = 5
-y = x + 4
 dump
-say x, y
+while x < 10 ->
+    dump
+    if x % 2 ->
+        say "hi"
+    say x
+    x = x + 1

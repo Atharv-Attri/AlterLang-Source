@@ -1,6 +1,6 @@
 import re
 comparables = ["==", "=>", "<=", ">=", "=<",  ">", "<", "True", "true", "False",
-               "false"]
+               "false","%"]
 
 mathopers = ["+", "-", "*", "%", "^", "**"]
 
@@ -96,6 +96,11 @@ def condition(conditional, varlist):
         return condition[0] <= condition[2]
     elif condition[1] == "=>":
         return condition[0] >= condition[2]
+    elif condition[1] == "%":
+        if condition[0] % condition[2] == 0:
+            return True
+        else: 
+            return False
     elif condition[1] in ["True", "true"]:
         return True
     elif condition[1] in ["False", "false"]:

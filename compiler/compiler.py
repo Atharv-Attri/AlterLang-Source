@@ -171,6 +171,7 @@ def set_variable(line: str) -> str:
 def tab_dealer(line):
     global order, tabnum
     #print(order)
+    dump(line)
     current = order[line.count("    ") - 1]
     if current[0] == "if":
         if current[1] is True:
@@ -189,8 +190,8 @@ def if_statement(line):
     tabnum += 1
 
 
-def dump() -> None:
-    print("==================DUMP=======================",variables,current_line,order, "==================DUMP=======================",sep="\n")
+def dump(line="Content not passed") -> None:
+    print("==================DUMP=======================","Variables: "+str(variables),"Line: "+str(current_line),"Order: "+str(order), "Content: "+line,"==================DUMP=======================",sep="\n")
 
 
 def main(filename):
@@ -202,12 +203,12 @@ def main(filename):
     # load file and scan for errors, print out a custom message if there were errors
     lines = []
     with open(filename, "r") as file:
-        raw = file.readlines()
+        raw = file.read().split("\n")
         for i in raw:
             lines.append(i)
-            current_line += 1
     out = []
     for i in lines:
+        current_line += 1
         line_out = top_level(i)
         if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)
