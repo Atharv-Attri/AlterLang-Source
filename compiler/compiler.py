@@ -25,6 +25,7 @@ def top_level(line: str, stripped=False):
     global count_tabs, tabnum, order
     #print("PRECHECK: ", order, line.count("    "), line, "S: ", stripped)
     #print(line.startswith("if"))
+    line = synonyms(line)
     if count_tabs is True and stripped is False:
         order = []
         count_tabs = False
@@ -176,6 +177,12 @@ def if_statement(line):
     order.append(["if", condition])
     #print(order)
     tabnum += 1
+
+
+def synonyms(line) -> str:
+    if line.startswith("print"):
+        return "say"+line.lstrip("print")
+    return line
 
 
 def main(filename):
