@@ -182,6 +182,7 @@ def if_statement(line):
 def synonyms(line) -> str:
     if line.startswith("print"):
         return "say"+line.lstrip("print")
+    return line
 
 
 def main(filename):
