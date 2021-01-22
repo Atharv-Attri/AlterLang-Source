@@ -243,6 +243,11 @@ def while_loop(line):
 def dump(line="Content not passed") -> None:
     print("==================DUMP=======================","Variables: "+str(variables),"Line: "+str(current_line),"Order: "+str(order), "Content: "+line,"==================DUMP=======================",sep="\n")
 
+def synonyms(line) -> str:
+    if line.startswith("print"):
+        return "say"+line.lstrip("print")
+    return line
+
 
 def main(filename):
     global current_line

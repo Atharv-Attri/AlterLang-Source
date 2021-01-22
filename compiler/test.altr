@@ -16,3 +16,5 @@ while x < 10 ->
         say "hi"
     say x
     x = x + 1
+
+print "helloooo"
