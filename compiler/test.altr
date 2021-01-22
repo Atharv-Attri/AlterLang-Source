@@ -1,1 +1,20 @@
+#a = 5
+#
+#while a > 1 ->
+#    say a
+#    a -= 1
+#    if a > 3 ->
+#        say a + "is less than 3"
+#<-
+say "hello"
+say"I'm a fish"
+x = 5
+dump
+while x < 10 ->
+    dump
+    if x % 2 ->
+        say "hi"
+    say x
+    x = x + 1
+
 print "helloooo"

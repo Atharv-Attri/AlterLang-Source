@@ -8,5 +8,10 @@
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": false,
+    "python.linting.ignorePatterns": [
+        ".vscode/*.py",
+        "**/site-packages/**/*.py",
+        "**/pastcompiler.py"
+    ]
     "editor.autoSave": "on"
 }
