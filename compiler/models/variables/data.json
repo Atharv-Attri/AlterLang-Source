@@ -1,0 +1,59 @@
+
+{
+    "var": {
+        "name": [
+            "apples",
+            "rank",
+            "mouse",
+            "quantity",
+            "gabble",
+            "tmp",
+            "apple-count",
+            "num_fish",
+            "numQuan",
+            "QuanFish"
+        ],
+        "templates": [
+            "set {var} to {value}",
+            "{var}={value}",
+            "{var} should equal {value}",
+            "set {var} = {value",
+            "let {var} equal {value}",
+            "let {var} represent {value}",
+            "{var} equals {value}",
+            "{var} = {value}",
+            "{var}= {value}",
+            "let {var} = {value}",
+            "let {var}={value}",
+            "let {var}= {value}",
+            "let {var} ={value}",
+            "set {var} equal to {value}",
+            "set {var} = to {value}",
+            "set {var} = {value}",
+            "set {var}={value}",
+            "set {var}= {value}",
+            "set {var} =value"
+        ]
+    },
+    "while": {
+        "templates":[
+            "while {cond} ->",
+            "while {cond} is true ->",
+            "while {cond} is false->"
+        ]
+    },
+    "if": {
+        "templates":[
+            "if {cond} is true ->",
+            "in the event {cond} is true->",
+            "in the event of {cond} being true->",
+            "if {cond} is false->",
+            "in the event {cond} is false->",
+            "in the event of {cond} being false->",
+            "assuming {cond} is true->",
+            "assuming {cond} is false->",
+            "in the event {cond}->",
+            "assuming {cond}->"
+        ]
+    }
+}

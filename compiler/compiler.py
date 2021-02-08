@@ -3,9 +3,11 @@ import re
 import rich
 
 try:
-    from . import util
+    from . import util, usemodel, extractvar
 except ImportError:
     import util
+    import usemodel
+    import extractvar
 
 current_line = 0
 variables = {}
@@ -30,6 +32,7 @@ def top_level(line: str, stripped=False):
     # print(order)
     if line.startswith("#"):
         return "#ignore"
+    
     if line.startswith("dump"):
         dump()
     elif line.startswith("say"):
@@ -47,7 +50,7 @@ def top_level(line: str, stripped=False):
         return tor
     elif util.var_math_check(line) is True:
         return var_math(line)
-    elif util.count("=", line) == 1 and util.position("=", line)[0] != 0:
+    elif usemodel.run(line):
         return set_variable(line)
 
 
@@ -71,6 +74,7 @@ def end_arrow():
             order.pop(-1)
         count_tabs = True
         return tab_dealer(line)
+
 
 def say(line: str) -> str:
     """
@@ -152,6 +156,12 @@ def set_variable(line: str) -> str:
     Return:
         string - variable
     """
+    global variables
+    var = extractvar.Variable(line)
+    name = var.get_name()
+    value = var.get_value()
+
+    variables[name] = value
     # The code for making variables
     line = line.replace("\n", "")
     name = ""
@@ -175,21 +185,12 @@ def set_variable(line: str) -> str:
                 variables[mathout[0]] = mathout[1]
                 print(variables)
                 return variables[mathout[0]]
-        for i in line:
-            if i == "=":
-                equal = True
-                continue
-            if equal is False:
-                name += i
-            else:
-                value += i
-        name = name.strip(" ")
-        value = value.lstrip((" "))
-        value = util.auto_convert(value)
+        var = extractvar.Variable(line)
+        name = var.get_name()
+        value = var.get_value()
         variables[name] = value
         return variables[name]
-    
-         
+
 
 def tab_dealer(line):
     global order, tabnum, variables
@@ -240,12 +241,23 @@ def while_loop(line):
     line = util.sanitize(line)
     new_order = ["while", line, []]
     order.append(new_order)
+
+
 def dump(line="Content not passed") -> None:
-    print("==================DUMP=======================","Variables: "+str(variables),"Line: "+str(current_line),"Order: "+str(order), "Content: "+line,"==================DUMP=======================",sep="\n")
+    print(
+        "==================DUMP=======================",
+        "Variables: " + str(variables),
+        "Line: " + str(current_line),
+        "Order: " + str(order),
+        "Content: " + line,
+        "==================DUMP=======================",
+        sep="\n",
+    )
+
 
 def synonyms(line) -> str:
     if line.startswith("print"):
-        return "say"+line.lstrip("print")
+        return "say" + line.lstrip("print")
     return line
 
 
