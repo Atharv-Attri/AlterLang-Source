@@ -292,6 +292,3 @@ def getVarMathValues(line: str) -> dict:
     if values["oper"] == "^":
         values["oper"] = "**"
     return values
-
-
-print(dovarmath("y = x + 4", {"x": 5}))

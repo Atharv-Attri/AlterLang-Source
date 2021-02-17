@@ -4,11 +4,16 @@ import rich
 
 try:
     from . import util, usemodel, extractvar
+    
 except ImportError:
     import util
     import usemodel
     import extractvar
 
+from textblob import TextBlob
+
+
+model = usemodel.load()
 current_line = 0
 variables = {}
 order = []
@@ -25,14 +30,17 @@ def top_level(line: str, stripped=False):
     """
     Choses what to send the line to
     """
-    global count_tabs, tabnum, order
+    global count_tabs, tabnum, order, model
+    
     if count_tabs is True and stripped is False:
         order = []
         count_tabs = False
     # print(order)
+    blob = TextBlob(line,classifier=model)
     if line.startswith("#"):
         return "#ignore"
-    
+    elif list(line) == []:
+        return None
     if line.startswith("dump"):
         dump()
     elif line.startswith("say"):
@@ -50,7 +58,8 @@ def top_level(line: str, stripped=False):
         return tor
     elif util.var_math_check(line) is True:
         return var_math(line)
-    elif usemodel.run(line):
+    elif blob.classify() == "pos":
+        print("WHOOOOOOOOOOOOOOOOOOO")
         return set_variable(line)
 
 
@@ -157,12 +166,7 @@ def set_variable(line: str) -> str:
         string - variable
     """
     global variables
-    var = extractvar.Variable(line)
-    name = var.get_name()
-    value = var.get_value()
-
-    variables[name] = value
-    # The code for making variables
+    ogline = line
     line = line.replace("\n", "")
     name = ""
     value = ""
@@ -185,7 +189,7 @@ def set_variable(line: str) -> str:
                 variables[mathout[0]] = mathout[1]
                 print(variables)
                 return variables[mathout[0]]
-        var = extractvar.Variable(line)
+        var = extractvar.Variable(ogline)
         name = var.get_name()
         value = var.get_value()
         variables[name] = value

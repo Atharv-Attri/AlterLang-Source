@@ -22,6 +22,7 @@ def run(text: str) -> bool:
 
 
 if __name__ == "__main__":
+    cl = load()
     t1 = time.time()
     blob = TextBlob("while x is 1:", classifier=cl)
     print(blob.classify())
@@ -32,5 +33,9 @@ if __name__ == "__main__":
     print("Classifying took: ", time.time() - t1)
     t1 = time.time()
     blob = TextBlob("name = 'hello'", classifier=cl)
+    print(blob.classify())
+    print("Classifying took: ", time.time() - t1)
+    t1 = time.time()
+    blob = TextBlob("\n", classifier=cl)
     print(blob.classify())
     print("Classifying took: ", time.time() - t1)

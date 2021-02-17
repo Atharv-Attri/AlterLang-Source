@@ -30,6 +30,7 @@ class Variable:
 
     def get_name(self):
         self.tmp = word_tokenize(self.text)
+        print("HIIIII:: ",self.text)
         self.words = nltk.pos_tag(self.tmp)
         self.words = [i for i in self.words if i[0] not in self.stoplist]
         self.words = [i for i in self.words if i[1] in self.namelookup]
@@ -50,6 +51,6 @@ class Variable:
             if i[1] == "CD":
                 return i[0]
 
-imp = Variable('hello = "hello"')
+imp = Variable('set the value of x to 5')
 print(imp.get_name())
 print(imp.get_value())

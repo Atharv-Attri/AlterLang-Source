@@ -1,20 +1,4 @@
-#a = 5
-#
-#while a > 1 ->
-#    say a
-#    a -= 1
-#    if a > 3 ->
-#        say a + "is less than 3"
-#<-
-say "hello"
-say"I'm a fish"
-x = 5
-dump
-while x < 10 ->
-    dump
-    if x % 2 ->
-        say "hi"
-    say x
-    x = x + 1
+say "this is the correct file FYI"
+set the value of x to 5
 
-print "helloooo"
+say "x is: " + x
