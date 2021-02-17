@@ -9,9 +9,12 @@ try:
     with open("stoplist.json") as f:
         stoplist = json.load(f)
 except:
-    with open("./compiler/stoplist.json") as f:
-        stoplist = json.load(f)
-
+    try:
+        with open("./compiler/stoplist.json") as f:
+            stoplist = json.load(f)
+    except:
+        with open("./alterlang-source/compiler/stoplist.json") as f:
+            stoplist = json.load(f)
 
 class Variable:
     def __init__(self, text):
@@ -33,9 +36,7 @@ class Variable:
 
     def get_name(self):
         self.tmp = word_tokenize(self.text)
-        print("HIIIII:: ", self.text)
         self.words = nltk.pos_tag(self.tmp)
-        print(self.words)
         self.words = [i for i in self.words if i[0] not in self.stoplist]
         self.words = [i for i in self.words if i[1] in self.namelookup]
         return self.words[-1][0]
@@ -57,6 +58,6 @@ class Variable:
                 return i[0]
 
 
-imp = Variable("a = 4")
-print(imp.get_name())
-print(imp.get_value())
+#imp = Variable("a = 4")
+#print(imp.get_name())
+#print(imp.get_value())

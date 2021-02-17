@@ -59,7 +59,6 @@ def top_level(line: str, stripped=False):
     elif util.var_math_check(line) is True:
         return var_math(line)
     elif blob.classify() == "pos":
-        print("WHOOOOOOOOOOOOOOOOOOO")
         return set_variable(line)
 
 

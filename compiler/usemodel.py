@@ -7,7 +7,11 @@ def load():
     try:
         cl = pickle.load(open("./models/variables/classifier.pickle", "rb"))
     except:
-        cl = pickle.load(open("./compiler/models/variables/classifier.pickle", "rb"))
+        try:
+            cl = pickle.load(open("./compiler/models/variables/classifier.pickle", "rb"))
+        except:
+            cl = pickle.load(open(r"C:\Users\atharv\Documents\Alter\AlterLang-Source\compiler\models\variables\classifier.pickle", "rb"))
+
 
     return cl
 
