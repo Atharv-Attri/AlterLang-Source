@@ -1,4 +1,5 @@
 say "this is the correct file FYI"
 set the value of x to 5
-
+y = 4
 say "x is: " + x
+say x, y

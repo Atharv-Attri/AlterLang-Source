@@ -4,7 +4,7 @@ import rich
 
 try:
     from . import util, usemodel, extractvar
-    
+
 except ImportError:
     import util
     import usemodel
@@ -31,12 +31,12 @@ def top_level(line: str, stripped=False):
     Choses what to send the line to
     """
     global count_tabs, tabnum, order, model
-    
+
     if count_tabs is True and stripped is False:
         order = []
         count_tabs = False
     # print(order)
-    blob = TextBlob(line,classifier=model)
+    blob = TextBlob(line, classifier=model)
     if line.startswith("#"):
         return "#ignore"
     elif list(line) == []:
@@ -192,6 +192,7 @@ def set_variable(line: str) -> str:
         var = extractvar.Variable(ogline)
         name = var.get_name()
         value = var.get_value()
+        value = util.auto_convert(value)
         variables[name] = value
         return variables[name]
 
