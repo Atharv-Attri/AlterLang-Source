@@ -16,6 +16,7 @@ except:
         with open("./alterlang-source/compiler/stoplist.json") as f:
             stoplist = json.load(f)
 
+
 class Variable:
     def __init__(self, text):
         global stoplist
@@ -58,6 +59,6 @@ class Variable:
                 return i[0]
 
 
-#imp = Variable("a = 4")
-#print(imp.get_name())
-#print(imp.get_value())
+# imp = Variable("a = 4")
+# print(imp.get_name())
+# print(imp.get_value())

@@ -10,12 +10,6 @@ with console.status("[bold green]Working on tasks...") as status:
     tasks = ["started", "loaded", "pickle made", "classified"]
     task = tasks.pop(0)
     console.log(f"{task} complete")
-    train = [
-        # tuples in the format of ("data","<pos/neg>")
-    ]
-    test = [
-        # tuples in the format of ("data","<pos/neg>")
-    ]
     with open("model.json", "r") as fp:
         cl = NaiveBayesClassifier(fp, format="json")
     task = tasks.pop(0)

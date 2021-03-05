@@ -1,5 +1,16 @@
-say "this is the correct file FYI"
-set the value of x to 5
-y = 4
-say "x is: " + x
-say x, y
+a = 1
+while a < 16 ->
+     if a % 3 == 0 and a % 5 == 0 ->
+        say "FizzBuzz"
+    <-
+    elif a % 5 == 0 ->
+        say "Buzz"
+    <-
+    elif a % 3 == 0 ->
+        say "Fizz"
+    <-
+    else ->
+        say "nah"
+    <-
+    a += 1
+<-

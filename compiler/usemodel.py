@@ -8,15 +8,20 @@ def load():
         cl = pickle.load(open("./models/variables/classifier.pickle", "rb"))
     except:
         try:
-            cl = pickle.load(open("./compiler/models/variables/classifier.pickle", "rb"))
+            cl = pickle.load(
+                open("./compiler/models/variables/classifier.pickle", "rb")
+            )
         except:
-            cl = pickle.load(open(r"C:\Users\atharv\Documents\Alter\AlterLang-Source\compiler\models\variables\classifier.pickle", "rb"))
-
-
+            cl = pickle.load(
+                open(
+                    r"C:\Users\atharv\Documents\Alter\AlterLang-Source\compiler\models\variables\classifier.pickle",
+                    "rb",
+                )
+            )
     return cl
 
 
-def run(text: str) -> bool:
+def classify(text: str) -> bool:
     cl = load()
     blob = TextBlob(text, classifier=cl)
     out = blob.classify()

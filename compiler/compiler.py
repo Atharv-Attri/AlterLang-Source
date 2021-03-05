@@ -3,12 +3,13 @@ import re
 import rich
 
 try:
-    from . import util, usemodel, extractvar
+    from . import util, usemodel, extractvar, transpiler
 
 except ImportError:
     import util
     import usemodel
     import extractvar
+    import transpiler
 
 from textblob import TextBlob
 
@@ -17,8 +18,9 @@ model = usemodel.load()
 current_line = 0
 variables = {}
 order = []
-tabnum = -1
+tabnum = None
 count_tabs = False
+transpile = False
 # ! clean up code, maintainablity is like D- or something
 # TODO: Make tests
 # ? add type purification
@@ -30,12 +32,19 @@ def top_level(line: str, stripped=False):
     """
     Choses what to send the line to
     """
-    global count_tabs, tabnum, order, model
-
+    global count_tabs, tabnum, order, model, transpile, variables
+    tabnum = len(order)
+    print(line, tabnum, order)
+    if line.startswith(".dev;transpile"):
+        if transpile:
+            transpile = False
+        else:
+            transpile = True
+            transpiler.starter(variables)
+        return
     if count_tabs is True and stripped is False:
         order = []
         count_tabs = False
-    # print(order)
     blob = TextBlob(line, classifier=model)
     if line.startswith("#"):
         return "#ignore"
@@ -47,41 +56,33 @@ def top_level(line: str, stripped=False):
         return say(line)
     elif line.startswith("if"):
         if_statement(line)
+    elif line.startswith("elif"):
+        return elseif_statement(line)
+    elif line.startswith("else"):
+        return else_statement(line)
     elif line.startswith("while"):
         while_loop(line)
     elif line.startswith("<-"):
         end_arrow()
-    elif line.startswith("\t") or line.startswith(" "):
-        if order[-1][0] != "while":
-            count_tabs = True
-        tor = tab_dealer(line)
-        return tor
+    elif line.startswith("\t") or line.startswith("    "):
+        return tab_dealer(line)
     elif util.var_math_check(line) is True:
         return var_math(line)
-    elif blob.classify() == "pos":
+    elif re.match(r"\w+ ?= ?.+", line) or blob.classify() == "pos":
         return set_variable(line)
 
 
 def end_arrow():
-    global order, variables
-    index = -1
-    current = order[index]
-    while current[0] != "while":
-        index -= 1
-        current = order[index]
-    tabs = str(current[1]).count("    ")
-    while util.condition(current[1], variables) is not False:
-        remove = 0
-        for i in current[2]:
-            i = str(i).lstrip("    ")
-            # print(i)
-            top_level(i)
-            if i.startswith("if"):
-                remove += 1
-        for i in range(remove):
-            order.pop(-1)
-        count_tabs = True
-        return tab_dealer(line)
+    global order, variables, transpile
+    try:
+        order.pop(-1)
+    except IndexError:
+        pass
+    if len(order) == 0:
+        out = transpiler.run()
+        variables = out[0]
+        print(out[1])
+        transpile = False
 
 
 def say(line: str) -> str:
@@ -91,6 +92,7 @@ def say(line: str) -> str:
     Return:
         str - text that was printed
     """
+    global transpile, tabnum
     listed = list(line)
     out = ""
     start = None
@@ -144,11 +146,15 @@ def say(line: str) -> str:
             raise Exception("Variable not found")
         return variables[line]
 
-    # kavish's code goes here
     else:
         to_say = list(re.findall(r"say[ ]*?['\"](.+)['\"]", line))
         if len(to_say) > 0:
-            print(to_say[0])
+            if transpile:
+                transpiler.add_line(
+                    "    " * tabnum + transpiler.fill_print_plain(to_say[0])
+                )
+            else:
+                print(to_say[0])
         else:
             raise Exception(
                 f"Error on line: {line}\nInvalid syntax for say statement. Did you add too many spaces or forget quotes?"
@@ -164,7 +170,7 @@ def set_variable(line: str) -> str:
     Return:
         string - variable
     """
-    global variables
+    global variables, tabnum
     ogline = line
     line = line.replace("\n", "")
     name = ""
@@ -192,38 +198,71 @@ def set_variable(line: str) -> str:
         name = var.get_name()
         value = var.get_value()
         value = util.auto_convert(value)
-        variables[name] = value
-        return variables[name]
+        if transpile:
+            transpiler.add_line("    " * tabnum + transpiler.fill_var(name, value))
+        else:
+            variables[name] = value
+            return variables[name]
 
 
 def tab_dealer(line):
-    global order, tabnum, variables
-    # print(order, line)
-    try:
-        current = order[line.count("    ") - 1]
-    except IndexError:
-        current = order[-1]
-    if current[0] == "if":
-        if current[1] is True:
-            line = util.remove_tabs(line)
-            return top_level(line, stripped=True)
-    if current[0] == "while":
-        try:
-            order[line.count("    ") - 1][2].append(line)
-        except IndexError:
-            order[-1][2].append(line)
+    global transpile, tabnum
+    if transpile:
+        tabnum = util.count("    ", line)
+        line = line.lstrip("    ")
+        return top_level(line)
 
 
 def if_statement(line):
-    global variables, tabnum
+    global order, transpile, variables, tabnum
     line = util.sanitize(line)
-    condition = util.condition(line, variables)
-    order.append(["if", condition])
-    tabnum += 1
+    new_order = ["if"]
+    order.append(new_order)
+    if not transpile:
+        transpiler.starter(variables)
+        transpile = True
+    transpiler.add_line(
+        "    " * tabnum
+        + transpiler.fill_if(re.findall(r"if ?(.+ ?[=<>=andor%=]+ ?.+) ?->", line)[0])
+    )
+    tabnum = len(order)
+
+
+def elseif_statement(line):
+    global order, transpile, variables, tabnum
+    line = util.sanitize(line)
+    new_order = ["elseif"]
+    order.append(new_order)
+    if not transpile:
+        transpiler.starter(variables)
+        transpile = True
+    transpiler.add_line(
+        "    " * tabnum
+        + transpiler.fill_elseif(
+            re.findall(r"elif ?(.+ ?[=<andor>=%=]+ ?.+) ?->", line)[0]
+        )
+    )
+    tabnum = len(order)
+
+
+def else_statement(line):
+    global order, transpile, variables, tabnum
+    line = util.sanitize(line)
+    new_order = ["else"]
+    order.append(new_order)
+    if not transpile:
+        transpiler.starter(variables)
+        transpile = True
+    transpiler.add_line(
+        "    " * tabnum
+        + transpiler.fill_else()
+    )
+    tabnum = len(order)
 
 
 def var_math(line):
-    global variables
+    global variables, transpile, tabnum
+    linecp = line
     line = util.sanitize(line)
     line = util.split_var_math(line)
     varname = line[0]
@@ -236,15 +275,26 @@ def var_math(line):
         value = util.var_math(line)
     except TypeError:
         raise Exception("INVALID OPERATION")
+    if transpile:
+        transpiler.add_line("    " * tabnum + linecp + "\n")
+        return
     variables[varname] = value
     return value
 
 
 def while_loop(line):
-    global variables, order
+    global order, transpile, variables, tabnum
     line = util.sanitize(line)
-    new_order = ["while", line, []]
+    new_order = ["while"]
     order.append(new_order)
+    if not transpile:
+        transpiler.starter(variables)
+        transpile = True
+    transpiler.add_line(
+        "    " * tabnum
+        + transpiler.fill_while(re.findall(r"while ?(.+ ?[=%<andor>==]+ ?.+) ?->", line)[0])
+    )
+    tabnum = len(order)
 
 
 def dump(line="Content not passed") -> None:
@@ -262,6 +312,7 @@ def dump(line="Content not passed") -> None:
 def synonyms(line) -> str:
     if line.startswith("print"):
         return "say" + line.lstrip("print")
+    re.sub(r"^\botherwise\b|\belse ?if\b", "elif", line)
     return line
 
 
