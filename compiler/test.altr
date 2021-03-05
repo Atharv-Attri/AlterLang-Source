@@ -10,7 +10,7 @@ while a < 16 ->
         say "Fizz"
     <-
     else ->
-        say "nah"
+        say a
     <-
     a += 1
 <-

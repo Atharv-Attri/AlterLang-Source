@@ -34,7 +34,6 @@ def top_level(line: str, stripped=False):
     """
     global count_tabs, tabnum, order, model, transpile, variables
     tabnum = len(order)
-    print(line, tabnum, order)
     if line.startswith(".dev;transpile"):
         if transpile:
             transpile = False
@@ -141,7 +140,11 @@ def say(line: str) -> str:
         line = line.lstrip("say")
         line = line.lstrip(" ")
         try:
-            print(variables[line])
+            if not transpile:
+                print(variables[line])
+            else:
+                print(line)
+                transpiler.add_line("    "*tabnum + transpiler.fill_print_plain_var(line))
         except KeyError:
             raise Exception("Variable not found")
         return variables[line]
