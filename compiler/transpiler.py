@@ -176,8 +176,9 @@ def make_varlist(tupvarlist: list) -> dict:
 def run() -> list:
     global fname, progout
     ender()
+    args = ["python", f"{fname}.py"]
     process = subprocess.Popen(
-        f"python {fname}.py", stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     out, err = process.communicate()
     out, err = str(out), str(err)
