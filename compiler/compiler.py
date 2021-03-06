@@ -1,6 +1,9 @@
 import sys
 import re
 import rich
+from rich.console import Console
+from rich.table import Table
+from rich.traceback import install
 
 try:
     from . import util, usemodel, extractvar, transpiler
@@ -99,24 +102,46 @@ def say(line: str) -> str:
     quote_used = ""
     if len(util.groups(line, '"', "+")) > 1:
         groups = util.groups(line, '"', "+")
+        print(groups)
         out = ""
+        tout = []
         for i in groups:
             i = i.strip(" ")
             if i.startswith("say"):
-                i = i.lstrip('say "')
+                i = i.replace("say ","")
+                if i.startswith('"'):
+                    i = "".join(list(i)[1:])
+                print(i)
                 i = i.rstrip('"')
+                if transpile:
+                    print(i, variables.keys())
+                    if i in variables.keys():
+                        tout.append([i, 0])
+                    else:
+                        tout.append([i, 1])
+                    continue
                 print(i, end="")
                 out += str(i)
             elif i.startswith('"'):
                 i = i.strip('"')
+                if transpile:
+                    tout.append([i, 1])
+                    continue
                 print(i, end="")
+
                 out += str(i)
             else:
                 try:
+                    if transpile:
+                        tout.append([i, 0])
+                        continue
                     print(variables[i], end="")
                     out += str(variables[i])
                 except KeyError:
                     raise Exception("Variable not found")
+        if transpile:
+            transpiler.add_line("    "*tabnum + transpiler.fill_print_text_var(tout))
+            return "__TRANSPILER.IGNORE.OUT__"
         print("")
         return out
     elif util.count("'", line) == 0 and util.count('"', line) == 0 and "," in line:
@@ -303,13 +328,33 @@ def while_loop(line):
 def dump(line="Content not passed") -> None:
     print(
         "==================DUMP=======================",
-        "Variables: " + str(variables),
-        "Line: " + str(current_line),
         "Order: " + str(order),
         "Content: " + line,
         "==================DUMP=======================",
         sep="\n",
     )
+    console = Console()
+
+    table = Table(show_header=True, header_style="bold blue", show_lines=True)
+    table.add_column("Name")
+    table.add_column("Type", justify="right")
+    table.add_column("Value")
+    for i in variables.keys():
+        table.add_row(
+            i,
+            str(type(variables[i])),
+            str(variables[i])
+        )
+    rich.print("[bold blue]Variables:")
+    console.print(table)
+    rich.print("[bold blue]Current Line: " + str(current_line))
+    table = Table(show_header=True, header_style="bold blue", show_lines=True)
+    table.add_column("Order")
+    for i in order:
+        table.add_row(i)
+    console.print(table)
+    rich.print("[bold blue]Content: " + line)
+    
 
 
 def synonyms(line) -> str:
@@ -323,6 +368,7 @@ def main(filename):
     global current_line
     # print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
+    install(extra_lines=8, show_locals=True)
     if str(filename).endswith(".altr") is False:
         raise Exception("File must end with .altr")
     # load file and scan for errors, print out a custom message if were errs
@@ -337,7 +383,31 @@ def main(filename):
         line_out = top_level(i)
         if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)
-    print(lines, variables, order, sep="\n")
+    print("\n")
+    console = Console()
+    table = Table(show_header=True, header_style="bold blue", show_lines=True)
+    table.add_column("Name")
+    table.add_column("Type", justify="right")
+    table.add_column("Value")
+    for i in variables.keys():
+        table.add_row(
+            i,
+            str(type(variables[i])),
+            str(variables[i])
+        )
+    console.print(table)
+    table = Table(show_header=True, header_style="bold blue", show_lines=True)
+    table.add_column("Order")
+    for i in order:
+        table.add_row(i)
+    console.print(table)
+    table = Table(show_header=True, header_style="bold blue", show_lines=True)
+    table.add_column("Line #")
+    table.add_column("Line Content")
+    for x,i in enumerate(lines):
+        table.add_row(str(x+1), i)
+    console.print(table)
+    
     rich.print("[bold green]No Errors![/bold green]")
     rich.print("[bold blue]Program exited with code 0[/bold blue]")
     return out

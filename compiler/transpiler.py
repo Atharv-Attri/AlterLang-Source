@@ -12,7 +12,7 @@ def templates(type: str) -> str:
     template_bank = {
         "var": "{name} = {value}\n",
         "print_plain": "print('!>>'+ '{text}' + '<<;')\n",
-        "print_text+var": "print('!>>'+ {text}+str({var}) + '<<;')\n",
+        "print_text+var": """print('!>>' """,
         "print_plain_var": "print('!>>'+ str({var}) + '<<;')\n",
         "input": "{name} = input({prompt})\n",
         "if": "if {condition}:\n",
@@ -36,10 +36,16 @@ def fill_print_plain(text) -> str:
     return line
 
 
-def fill_print_plain_var(text, var) -> str:
-    template = templates("print_text+var")
-    line = fill(template, "text", text)
-    line = fill(line, "var", var)
+def fill_print_text_var(args: list) -> str:
+    line = templates("print_text+var")
+    print(args)
+    for i in args:
+        if i[1] == 1:
+            line = line + ' + "' + i[0] + '"'
+        else:
+            line = line + ' + str(' + i[0] + ")"
+    
+    line = line + "+ '<<;')\n"
     return line
 
 
@@ -101,7 +107,7 @@ def transfer_var_returner() -> str:
 def get_stdout() -> None:
     global progout
     line = progout
-    todel = re.findall(r"!>>(\w+)<<;", line)
+    todel = re.findall(r"!>>(.+?)<<;", line)
     line = "\n".join(todel)
     return line
 
