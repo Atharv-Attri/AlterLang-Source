@@ -326,13 +326,7 @@ def while_loop(line):
 
 
 def dump(line="Content not passed") -> None:
-    print(
-        "==================DUMP=======================",
-        "Order: " + str(order),
-        "Content: " + line,
-        "==================DUMP=======================",
-        sep="\n",
-    )
+    
     console = Console()
 
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
