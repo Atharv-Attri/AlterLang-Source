@@ -1,6 +1,7 @@
 import sys
 import re
 import rich
+import time
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
@@ -17,7 +18,7 @@ except ImportError:
 from textblob import TextBlob
 
 
-model = usemodel.load()
+model = None
 current_line = 0
 variables = {}
 order = []
@@ -358,8 +359,23 @@ def synonyms(line) -> str:
     return line
 
 
-def main(filename):
-    global current_line
+def clear() -> None:
+    global variables, order, current_line, tabnum, model, transpile
+    variables = {}
+    order = []
+    current_line = 0
+    tabnum = 0
+    model = None
+    transpile = False
+    
+
+
+def main(filename, premodel = None):
+    global current_line, model
+    if premodel == None:
+        model = usemodel.load()
+    else:
+        model = premodel
     # print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
     install(extra_lines=8, show_locals=True)
@@ -378,6 +394,7 @@ def main(filename):
         if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)
     print("\n")
+    time.sleep(1.5)
     console = Console()
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
     table.add_column("Name")

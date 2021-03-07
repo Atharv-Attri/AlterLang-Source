@@ -116,7 +116,7 @@ def get_var() -> list:
     global progout
     if progout is None:
         raise Exception("No STDOUT set yet")
-    varlist = re.findall(r"__TRANSPILER\.VAR\.OUT__--N:(.+)--V:(.+);", progout)
+    varlist = re.findall(r"__TRANSPILER\.VAR\.OUT__--N:(.+?)--V:(.+?);", progout)
     return varlist
 
 
@@ -185,7 +185,7 @@ def run() -> list:
     if err != "b''":
         rich.print("[bold red]ERROR: "+ err)
     progout = out.lstrip("b'").rstrip("'")
-    # os.remove(f"./{fname}.py")
+    os.remove(f"./{fname}.py")
     toret = []
     vars = get_var()
     vars = make_varlist(vars)

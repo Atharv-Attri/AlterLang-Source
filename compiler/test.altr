@@ -1,7 +1,11 @@
-x = 1
-while x < 5 ->
-    say "hiii"
+a = 5
+let x equal 55
+say a
+say x
+dump
+while x < 57 ->
+    say "hello"
     x += 1
 <-
-
-dump
+f = ask "Name: "
+say f
