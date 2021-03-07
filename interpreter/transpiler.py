@@ -43,8 +43,8 @@ def fill_print_text_var(args: list) -> str:
         if i[1] == 1:
             line = line + ' + "' + i[0] + '"'
         else:
-            line = line + ' + str(' + i[0] + ")"
-    
+            line = line + " + str(" + i[0] + ")"
+
     line = line + "+ '<<;')\n"
     return line
 
@@ -177,13 +177,11 @@ def run() -> list:
     global fname, progout
     ender()
     args = ["python", f"{fname}.py"]
-    process = subprocess.Popen(
-        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
+    process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     out, err = str(out), str(err)
     if err != "b''":
-        rich.print("[bold red]ERROR: "+ err)
+        rich.print("[bold red]ERROR: " + err)
     progout = out.lstrip("b'").rstrip("'")
     os.remove(f"./{fname}.py")
     toret = []

@@ -14,7 +14,12 @@ except ImportError:
 rich.print("[blue]Alter Command Line Interface v.ALPHA")
 
 console = Console()
-tasks = ["Loaded Machine Learning Model", "Re-Processed model", "Verified model speed", "Verified model accuracy"]
+tasks = [
+    "Loaded Machine Learning Model",
+    "Re-Processed model",
+    "Verified model speed",
+    "Verified model accuracy",
+]
 with console.status("[bold green]Starting...") as status:
     model = usemodel.load()
     task = tasks.pop(0)
@@ -49,8 +54,8 @@ while True:
             fname = re.findall(r"run *(\w+).altr")
         else:
             fname = "test"
-        
-        interpreter.main(fname+".altr", model)
+
+        interpreter.main(fname + ".altr", model)
         print("\n\n")
         interpreter.clear()
 

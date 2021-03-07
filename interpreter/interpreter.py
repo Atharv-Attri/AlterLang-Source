@@ -109,7 +109,7 @@ def say(line: str) -> str:
         for i in groups:
             i = i.strip(" ")
             if i.startswith("say"):
-                i = i.replace("say ","")
+                i = i.replace("say ", "")
                 if i.startswith('"'):
                     i = "".join(list(i)[1:])
                 print(i)
@@ -141,7 +141,7 @@ def say(line: str) -> str:
                 except KeyError:
                     raise Exception("Variable not found")
         if transpile:
-            transpiler.add_line("    "*tabnum + transpiler.fill_print_text_var(tout))
+            transpiler.add_line("    " * tabnum + transpiler.fill_print_text_var(tout))
             return "__TRANSPILER.IGNORE.OUT__"
         print("")
         return out
@@ -170,7 +170,9 @@ def say(line: str) -> str:
                 print(variables[line])
             else:
                 print(line)
-                transpiler.add_line("    "*tabnum + transpiler.fill_print_plain_var(line))
+                transpiler.add_line(
+                    "    " * tabnum + transpiler.fill_print_plain_var(line)
+                )
         except KeyError:
             raise Exception("Variable not found")
         return variables[line]
@@ -282,10 +284,7 @@ def else_statement(line):
     if not transpile:
         transpiler.starter(variables)
         transpile = True
-    transpiler.add_line(
-        "    " * tabnum
-        + transpiler.fill_else()
-    )
+    transpiler.add_line("    " * tabnum + transpiler.fill_else())
     tabnum = len(order)
 
 
@@ -321,13 +320,15 @@ def while_loop(line):
         transpile = True
     transpiler.add_line(
         "    " * tabnum
-        + transpiler.fill_while(re.findall(r"while ?(.+ ?[=%<andor>==]+ ?.+) ?->", line)[0])
+        + transpiler.fill_while(
+            re.findall(r"while ?(.+ ?[=%<andor>==]+ ?.+) ?->", line)[0]
+        )
     )
     tabnum = len(order)
 
 
 def dump(line="Content not passed") -> None:
-    
+
     console = Console()
 
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
@@ -335,11 +336,7 @@ def dump(line="Content not passed") -> None:
     table.add_column("Type", justify="right")
     table.add_column("Value")
     for i in variables.keys():
-        table.add_row(
-            i,
-            str(type(variables[i])),
-            str(variables[i])
-        )
+        table.add_row(i, str(type(variables[i])), str(variables[i]))
     rich.print("[bold blue]Variables:")
     console.print(table)
     rich.print("[bold blue]Current Line: " + str(current_line))
@@ -349,7 +346,6 @@ def dump(line="Content not passed") -> None:
         table.add_row(i)
     console.print(table)
     rich.print("[bold blue]Content: " + line)
-    
 
 
 def synonyms(line) -> str:
@@ -367,10 +363,9 @@ def clear() -> None:
     tabnum = 0
     model = None
     transpile = False
-    
 
 
-def main(filename, premodel = None):
+def main(filename, premodel=None):
     global current_line, model
     if premodel == None:
         model = usemodel.load()
@@ -401,11 +396,7 @@ def main(filename, premodel = None):
     table.add_column("Type", justify="right")
     table.add_column("Value")
     for i in variables.keys():
-        table.add_row(
-            i,
-            str(type(variables[i])),
-            str(variables[i])
-        )
+        table.add_row(i, str(type(variables[i])), str(variables[i]))
     console.print(table)
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
     table.add_column("Order")
@@ -415,10 +406,10 @@ def main(filename, premodel = None):
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
     table.add_column("Line #")
     table.add_column("Line Content")
-    for x,i in enumerate(lines):
-        table.add_row(str(x+1), i)
+    for x, i in enumerate(lines):
+        table.add_row(str(x + 1), i)
     console.print(table)
-    
+
     rich.print("[bold green]No Errors![/bold green]")
     rich.print("[bold blue]Program exited with code 0[/bold blue]")
     return out
