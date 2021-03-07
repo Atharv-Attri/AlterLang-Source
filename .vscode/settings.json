@@ -11,7 +11,7 @@
     "python.linting.ignorePatterns": [
         ".vscode/*.py",
         "**/site-packages/**/*.py",
-        "**/pastcompiler.py"
+        "**/pastinterpreter.py"
     ]
     "editor.autoSave": "on"
 }

@@ -1,5 +1,4 @@
 import RAKE
-import operator
 import nltk
 from nltk.tokenize import word_tokenize
 import json
@@ -10,10 +9,10 @@ try:
         stoplist = json.load(f)
 except:
     try:
-        with open("./compiler/stoplist.json") as f:
+        with open("./interpreter/stoplist.json") as f:
             stoplist = json.load(f)
     except:
-        with open("./alterlang-source/compiler/stoplist.json") as f:
+        with open("./alterlang-source/interpreter/stoplist.json") as f:
             stoplist = json.load(f)
 
 

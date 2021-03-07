@@ -18,7 +18,7 @@ def main():
         if i["live"] == "0":
             total += 1
             out = subprocess.Popen(
-                f"python -m compiler tests/{i['file']}", stdout=subprocess.PIPE
+                f"python -m interpreter tests/{i['file']}", stdout=subprocess.PIPE
             )
             data = str(out.communicate())
             print(data)

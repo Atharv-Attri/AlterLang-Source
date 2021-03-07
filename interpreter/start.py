@@ -1,4 +1,3 @@
-import os
 import re
 import time
 import rich
@@ -6,10 +5,10 @@ from textblob import TextBlob
 from rich.console import Console
 
 try:
-    from . import compiler, usemodel
+    from . import interpreter, usemodel
 
 except ImportError:
-    import compiler
+    import interpreter
     import usemodel
 
 rich.print("[blue]Alter Command Line Interface v.ALPHA")
@@ -51,9 +50,9 @@ while True:
         else:
             fname = "test"
         
-        compiler.main(fname+".altr", model)
+        interpreter.main(fname+".altr", model)
         print("\n\n")
-        compiler.clear()
+        interpreter.clear()
 
     elif argin.startswith("exit"):
         exit()

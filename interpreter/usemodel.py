@@ -9,12 +9,12 @@ def load():
     except:
         try:
             cl = pickle.load(
-                open("./compiler/models/variables/classifier.pickle", "rb")
+                open("./interpreter/models/variables/classifier.pickle", "rb")
             )
         except:
             cl = pickle.load(
                 open(
-                    r"C:\Users\atharv\Documents\Alter\AlterLang-Source\compiler\models\variables\classifier.pickle",
+                    r"C:\Users\atharv\Documents\Alter\AlterLang-Source\interpreter\models\variables\classifier.pickle",
                     "rb",
                 )
             )

@@ -2,11 +2,11 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from compiler import compiler
+from interpreter import interpreter
 
 
 def test_hello():
-    assert compiler.main("tests/altr_files/if_statement.altr") == [
+    assert interpreter.main("tests/altr_files/if_statement.altr") == [
         5,
         44,
         0,
