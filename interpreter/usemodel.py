@@ -5,11 +5,15 @@ from textblob import TextBlob
 
 def load():
     try:
-        cl = pickle.load(open(r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle", "rb"))
+        cl = pickle.load(
+            open(r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle", "rb")
+        )
     except:
         try:
             cl = pickle.load(
-                open(r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle", "rb")
+                open(
+                    r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle", "rb"
+                )
             )
         except:
             cl = pickle.load(

@@ -63,15 +63,15 @@ class Whilel:
         self.text = text
         self.stoplist = stoplist["while"]
         self.tmp = ""
-    
+
     def focus(self):
         for i in stoplist:
-            self.text = self.text.replace(i,"")
-    
+            self.text = self.text.replace(i, "")
+
     def boolreplace(self):
-        self.text = re.sub(r"is [t/T]rue", "is True",self.text)
-        self.text = re.sub(r"is [f/F]alse", "is False",self.text)
-    
+        self.text = re.sub(r"is [t/T]rue", "is True", self.text)
+        self.text = re.sub(r"is [f/F]alse", "is False", self.text)
+
     def replace_discm(self):
         self.text = re.sub(r"{|:|->", "", self.text)
         self.text = re.sub(r"\(", "", self.text)
@@ -94,13 +94,13 @@ class ifl:
 
     def focus(self):
         for i in stoplist:
-            self.text = self.text.replace(i,"")
-        self.text = self.text.replace("assuming","")
-    
+            self.text = self.text.replace(i, "")
+        self.text = self.text.replace("assuming", "")
+
     def boolreplace(self):
-        self.text = re.sub(r"is ?[t/T]rue", " is True",self.text)
-        self.text = re.sub(r"is ?[f/F]alse", " is False",self.text)
-    
+        self.text = re.sub(r"is ?[t/T]rue", " is True", self.text)
+        self.text = re.sub(r"is ?[f/F]alse", " is False", self.text)
+
     def replace_discm(self):
         self.text = re.sub(r"{|:|->", "", self.text)
         self.text = re.sub(r"\(", "", self.text)
@@ -110,12 +110,9 @@ class ifl:
         self.focus()
         self.replace_discm()
         self.text = self.text.replace(" ", "")
-        self.text = self.text.replace("and"," and ")
+        self.text = self.text.replace("and", " and ")
         self.boolreplace()
-        self.text = self.text.replace("otherwise","")
-        self.text = self.text.replace("is"," is ")
-        self.text = self.text.replace("False"," False ")
+        self.text = self.text.replace("otherwise", "")
+        self.text = self.text.replace("is", " is ")
+        self.text = self.text.replace("False", " False ")
         return self.text
-
-
-

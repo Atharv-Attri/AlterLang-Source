@@ -7,6 +7,7 @@ from textblob import TextBlob
 from rich.console import Console
 import importlib.util
 import traceback
+
 try:
     from . import interpreter, usemodel
 
@@ -57,11 +58,12 @@ def run_tests():
     test_file_names = [i for i in os.listdir() if i.startswith("test_")]
     print(test_file_names)
     return
-    for i,x in enumerate(test_file_names):
+    for i, x in enumerate(test_file_names):
         spec = importlib.util.spec_from_file_location("Fdf", i)
         testfunc = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(foo)
         testfunc.MyClass()
+
 
 while True:
     importlib.reload(interpreter)
@@ -69,7 +71,7 @@ while True:
     if argin.startswith("run"):
         if "." in argin:
             fname = re.findall(r"run (\w+)\.altr", argin)
-            while len(fname) ==0:
+            while len(fname) == 0:
                 argin = input("> ")
                 fname = re.findall(r"run (\w+)\.altr", argin)
             fname = fname[0]
@@ -82,8 +84,6 @@ while True:
         except Exception:
             traceback.print_exc()
             pass
-        
-
 
     elif argin.startswith("exit"):
         exit()

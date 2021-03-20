@@ -1,6 +1,7 @@
 import sys
 import os
 import lid.util
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from interpreter import interpreter
 
@@ -30,9 +31,10 @@ def test_say_groups(model):
     ]
 
 
-#def test_input_string(monkeypatch, model):
-    #monkeypatch.setattr("builtins.input", lambda _: "Alter")
-    #assert interpreter.main("tests/altr_files/say_input.altr") == ["Alter", "Alter"]
+# def test_input_string(monkeypatch, model):
+# monkeypatch.setattr("builtins.input", lambda _: "Alter")
+# assert interpreter.main("tests/altr_files/say_input.altr") == ["Alter", "Alter"]
+
 
 def main(model) -> None:
     test_say_groups(model)

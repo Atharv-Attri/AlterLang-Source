@@ -1,5 +1,5 @@
 # Imported Modules
-from pickle import FALSE
+import pickle
 import sys
 import re
 import rich
@@ -7,7 +7,8 @@ import time
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
-# Imported Files 
+
+# Imported Files
 try:
     from . import util, usemodel, extractvar, transpiler
 
@@ -30,7 +31,7 @@ transpile = False
 
 
 # Text Classification
-def top_level(line: str, stripped=False,fname=None):
+def top_level(line: str, stripped=False, fname=None):
     """
     Choses what to send the line to
     """
@@ -58,7 +59,9 @@ def top_level(line: str, stripped=False,fname=None):
         dump()
     elif line.startswith("say"):
         return say(line)
-    elif line.startswith("if") or (blob.classify() == "if" and re.match(r"^[ ]*say",line) == False):
+    elif line.startswith("if") or (
+        blob.classify() == "if" and not re.match(r"^[ ]*say", line)
+    ):
         if_statement(line)
     elif line.startswith("elif"):
         return elseif_statement(line)
@@ -75,7 +78,8 @@ def top_level(line: str, stripped=False,fname=None):
     elif re.match(r"\w+ ?= ?.+", line) or blob.classify() == "var":
         return set_variable(line)
 
-# End arrow ( ->) 
+
+# End arrow ( ->)
 def end_arrow():
     global order, variables, transpile
     try:
@@ -88,6 +92,7 @@ def end_arrow():
         print(out[1])
         transpile = False
 
+
 # Say statment
 def say(line: str) -> str:
     """
@@ -96,7 +101,7 @@ def say(line: str) -> str:
     Return:
         str - text that was printed
     """
-# Exporting it to the transpiler where the while loop works
+    # Exporting it to the transpiler where the while loop works
     global transpile, tabnum
     listed = list(line)
     out = ""
@@ -191,7 +196,8 @@ def say(line: str) -> str:
 
         return to_say[0]
 
-# Declaring Variables 
+
+# Declaring Variables
 def set_variable(line: str) -> str:
     """
     Parameters:
@@ -235,6 +241,7 @@ def set_variable(line: str) -> str:
             variables[name] = value
             return variables[name]
 
+
 # Divides up the code into areas based upon the spacing like Python
 def tab_dealer(line):
     global transpile, tabnum
@@ -243,7 +250,8 @@ def tab_dealer(line):
         line = line.lstrip("    ")
         return top_level(line)
 
-# If Statement 
+
+# If Statement
 def if_statement(line):
     global order, transpile, variables, tabnum
     line = util.sanitize(line)
@@ -253,11 +261,9 @@ def if_statement(line):
     if not transpile:
         transpiler.starter(variables)
         transpile = True
-    transpiler.add_line(
-        "    " * tabnum
-        + transpiler.fill_if(extract.get_condition())
-    )
+    transpiler.add_line("    " * tabnum + transpiler.fill_if(extract.get_condition()))
     tabnum = len(order)
+
 
 # elseif statement
 def elseif_statement(line):
@@ -271,10 +277,13 @@ def elseif_statement(line):
     transpiler.add_line(
         "    " * tabnum
         + transpiler.fill_elseif(
-            re.findall(r"elif ?(.+ ?[=<andor>=%=]+ ?.+) ?[->:}]?", line)[0].replace("->","").replace("{","")
+            re.findall(r"elif ?(.+ ?[=<andor>=%=]+ ?.+) ?[->:}]?", line)[0]
+            .replace("->", "")
+            .replace("{", "")
         )
     )
     tabnum = len(order)
+
 
 # else statemtn
 def else_statement(line):
@@ -287,6 +296,7 @@ def else_statement(line):
         transpile = True
     transpiler.add_line("    " * tabnum + transpiler.fill_else())
     tabnum = len(order)
+
 
 # Putting variables and math together
 def var_math(line):
@@ -310,6 +320,7 @@ def var_math(line):
     variables[varname] = value
     return value
 
+
 # While Loop
 def while_loop(line):
     global order, transpile, variables, tabnum
@@ -321,15 +332,13 @@ def while_loop(line):
         transpile = True
     extract = extractvar.Whilel(line)
     transpiler.add_line(
-        "    " * tabnum
-        + transpiler.fill_while(
-            extract.get_condition()
-        )
+        "    " * tabnum + transpiler.fill_while(extract.get_condition())
     )
-    
+
     tabnum = len(order)
 
-# Dump command 
+
+# Dump command
 def dump(line="Content not passed") -> None:
 
     console = Console()
@@ -350,14 +359,18 @@ def dump(line="Content not passed") -> None:
     console.print(table)
     rich.print("[bold blue]Content: " + line)
 
+
 # Synonyms for different statements
 def synonyms(line) -> str:
     line = line.strip(";")
     if line.startswith("print"):
         return "say" + line.lstrip("print")
-    if line.startswith("int "): line = line.lstrip("int ")
-    if re.match(r"^\botherwise\b ?i?f?|\belse ?if\b",  line): line = re.sub(r"^\botherwise\b ?i?f?|\belse ?if\b", "elif", line)
+    if line.startswith("int "):
+        line = line.lstrip("int ")
+    if re.match(r"^\botherwise\b ?i?f?|\belse ?if\b", line):
+        line = re.sub(r"^\botherwise\b ?i?f?|\belse ?if\b", "elif", line)
     return line
+
 
 # Clears everything
 def clear() -> None:
@@ -378,7 +391,7 @@ def main(filename, premodel=None):
         model = premodel
     # print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
-    #install(extra_lines=8, show_locals=True)
+    install(extra_lines=8, show_locals=True)
     if str(filename).endswith(".altr") is False:
         raise Exception("File must end with .altr")
     # load file and scan for errors, print out a custom message if were errs
@@ -394,7 +407,7 @@ def main(filename, premodel=None):
         filename = None
     for i in lines:
         current_line += 1
-        line_out = top_level(i,fname=filename)
+        line_out = top_level(i, fname=filename)
         if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)
     print("\n")

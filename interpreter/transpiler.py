@@ -182,7 +182,7 @@ def run() -> list:
     if err != "b''":
         rich.print("[bold red]ERROR: " + err)
     progout = out.lstrip("b'").rstrip("'")
-    #os.remove(f"./{fname}.py")
+    # os.remove(f"./{fname}.py")
     toret = []
     vars = get_var()
     vars = make_varlist(vars)
