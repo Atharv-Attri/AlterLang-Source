@@ -28,7 +28,6 @@ class Variable:
         self.stop_dir = "./stoplist.txt"
         self.rake_object = RAKE.Rake(self.stop_dir)
         self.keywords = self.sort_tup(self.rake_object.run(self.text)[-10:])
-        print("KEYWORDS: ", self.keywords)
 
     def sort_tup(self, tup):
         tup.sort(key=lambda x: x[1])
@@ -58,6 +57,65 @@ class Variable:
                 return i[0]
 
 
-# imp = Variable("a = 4")
-# print(imp.get_name())
-# print(imp.get_value())
+class Whilel:
+    def __init__(self, text):
+        global stoplist
+        self.text = text
+        self.stoplist = stoplist["while"]
+        self.tmp = ""
+    
+    def focus(self):
+        for i in stoplist:
+            self.text = self.text.replace(i,"")
+    
+    def boolreplace(self):
+        self.text = re.sub(r"is [t/T]rue", "is True",self.text)
+        self.text = re.sub(r"is [f/F]alse", "is False",self.text)
+    
+    def replace_discm(self):
+        self.text = re.sub(r"{|:|->", "", self.text)
+        self.text = re.sub(r"\(", "", self.text)
+        self.text = re.sub(r"\)", "", self.text)
+
+    def get_condition(self):
+        self.focus()
+        self.boolreplace()
+        self.replace_discm()
+        self.text = self.text.replace(" ", "")
+        return self.text
+
+
+class ifl:
+    def __init__(self, text):
+        global stoplist
+        self.text = text
+        self.stoplist = stoplist["if"]
+        self.tmp = ""
+
+    def focus(self):
+        for i in stoplist:
+            self.text = self.text.replace(i,"")
+        self.text = self.text.replace("assuming","")
+    
+    def boolreplace(self):
+        self.text = re.sub(r"is ?[t/T]rue", " is True",self.text)
+        self.text = re.sub(r"is ?[f/F]alse", " is False",self.text)
+    
+    def replace_discm(self):
+        self.text = re.sub(r"{|:|->", "", self.text)
+        self.text = re.sub(r"\(", "", self.text)
+        self.text = re.sub(r"\)", "", self.text)
+
+    def get_condition(self):
+        self.focus()
+        self.replace_discm()
+        self.text = self.text.replace(" ", "")
+        self.text = self.text.replace("and"," and ")
+        self.boolreplace()
+        self.text = self.text.replace("otherwise","")
+        self.text = self.text.replace("is"," is ")
+        self.text = self.text.replace("False"," False ")
+        return self.text
+
+
+

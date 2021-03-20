@@ -1,3 +1,5 @@
+# Imported Modules
+from pickle import FALSE
 import sys
 import re
 import rich
@@ -5,7 +7,7 @@ import time
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
-
+# Imported Files 
 try:
     from . import util, usemodel, extractvar, transpiler
 
@@ -25,19 +27,17 @@ order = []
 tabnum = None
 count_tabs = False
 transpile = False
-# ! clean up code, maintainablity is like D- or something
-# TODO: Make tests
-# ? add type purification
-# ? think about using layer levels
-# ? reduce code reuse
 
 
-def top_level(line: str, stripped=False):
+# Text Classification
+def top_level(line: str, stripped=False,fname=None):
     """
     Choses what to send the line to
     """
     global count_tabs, tabnum, order, model, transpile, variables
     tabnum = len(order)
+    if fname is None:
+        line = synonyms(line)
     if line.startswith(".dev;transpile"):
         if transpile:
             transpile = False
@@ -49,6 +49,7 @@ def top_level(line: str, stripped=False):
         order = []
         count_tabs = False
     blob = TextBlob(line, classifier=model)
+    # Every Statement that needs to be classified
     if line.startswith("#"):
         return "#ignore"
     elif list(line) == []:
@@ -57,24 +58,24 @@ def top_level(line: str, stripped=False):
         dump()
     elif line.startswith("say"):
         return say(line)
-    elif line.startswith("if"):
+    elif line.startswith("if") or (blob.classify() == "if" and re.match(r"^[ ]*say",line) == False):
         if_statement(line)
     elif line.startswith("elif"):
         return elseif_statement(line)
     elif line.startswith("else"):
         return else_statement(line)
-    elif line.startswith("while"):
+    elif line.startswith("while") or blob.classify() == "while":
         while_loop(line)
-    elif line.startswith("<-"):
+    elif re.match(r"^<-|}|:", line):
         end_arrow()
     elif line.startswith("\t") or line.startswith("    "):
         return tab_dealer(line)
     elif util.var_math_check(line) is True:
         return var_math(line)
-    elif re.match(r"\w+ ?= ?.+", line) or blob.classify() == "pos":
+    elif re.match(r"\w+ ?= ?.+", line) or blob.classify() == "var":
         return set_variable(line)
 
-
+# End arrow ( ->) 
 def end_arrow():
     global order, variables, transpile
     try:
@@ -87,7 +88,7 @@ def end_arrow():
         print(out[1])
         transpile = False
 
-
+# Say statment
 def say(line: str) -> str:
     """
     Parameters:
@@ -95,6 +96,7 @@ def say(line: str) -> str:
     Return:
         str - text that was printed
     """
+# Exporting it to the transpiler where the while loop works
     global transpile, tabnum
     listed = list(line)
     out = ""
@@ -103,7 +105,6 @@ def say(line: str) -> str:
     quote_used = ""
     if len(util.groups(line, '"', "+")) > 1:
         groups = util.groups(line, '"', "+")
-        print(groups)
         out = ""
         tout = []
         for i in groups:
@@ -112,10 +113,8 @@ def say(line: str) -> str:
                 i = i.replace("say ", "")
                 if i.startswith('"'):
                     i = "".join(list(i)[1:])
-                print(i)
                 i = i.rstrip('"')
                 if transpile:
-                    print(i, variables.keys())
                     if i in variables.keys():
                         tout.append([i, 0])
                     else:
@@ -169,7 +168,6 @@ def say(line: str) -> str:
             if not transpile:
                 print(variables[line])
             else:
-                print(line)
                 transpiler.add_line(
                     "    " * tabnum + transpiler.fill_print_plain_var(line)
                 )
@@ -193,7 +191,7 @@ def say(line: str) -> str:
 
         return to_say[0]
 
-
+# Declaring Variables 
 def set_variable(line: str) -> str:
     """
     Parameters:
@@ -201,6 +199,7 @@ def set_variable(line: str) -> str:
     Return:
         string - variable
     """
+    # Input statement
     global variables, tabnum
     ogline = line
     line = line.replace("\n", "")
@@ -217,6 +216,7 @@ def set_variable(line: str) -> str:
         in_data = util.auto_convert(in_data)
         variables[line[0]] = in_data
         return in_data
+        # Math Operations
     else:
         for i in util.mathopers:
             if i in line and util.varmathcheck(line):
@@ -235,7 +235,7 @@ def set_variable(line: str) -> str:
             variables[name] = value
             return variables[name]
 
-
+# Divides up the code into areas based upon the spacing like Python
 def tab_dealer(line):
     global transpile, tabnum
     if transpile:
@@ -243,22 +243,23 @@ def tab_dealer(line):
         line = line.lstrip("    ")
         return top_level(line)
 
-
+# If Statement 
 def if_statement(line):
     global order, transpile, variables, tabnum
     line = util.sanitize(line)
     new_order = ["if"]
     order.append(new_order)
+    extract = extractvar.ifl(line)
     if not transpile:
         transpiler.starter(variables)
         transpile = True
     transpiler.add_line(
         "    " * tabnum
-        + transpiler.fill_if(re.findall(r"if ?(.+ ?[=<>=andor%=]+ ?.+) ?->", line)[0])
+        + transpiler.fill_if(extract.get_condition())
     )
     tabnum = len(order)
 
-
+# elseif statement
 def elseif_statement(line):
     global order, transpile, variables, tabnum
     line = util.sanitize(line)
@@ -270,12 +271,12 @@ def elseif_statement(line):
     transpiler.add_line(
         "    " * tabnum
         + transpiler.fill_elseif(
-            re.findall(r"elif ?(.+ ?[=<andor>=%=]+ ?.+) ?->", line)[0]
+            re.findall(r"elif ?(.+ ?[=<andor>=%=]+ ?.+) ?[->:}]?", line)[0].replace("->","").replace("{","")
         )
     )
     tabnum = len(order)
 
-
+# else statemtn
 def else_statement(line):
     global order, transpile, variables, tabnum
     line = util.sanitize(line)
@@ -287,7 +288,7 @@ def else_statement(line):
     transpiler.add_line("    " * tabnum + transpiler.fill_else())
     tabnum = len(order)
 
-
+# Putting variables and math together
 def var_math(line):
     global variables, transpile, tabnum
     linecp = line
@@ -309,7 +310,7 @@ def var_math(line):
     variables[varname] = value
     return value
 
-
+# While Loop
 def while_loop(line):
     global order, transpile, variables, tabnum
     line = util.sanitize(line)
@@ -318,15 +319,17 @@ def while_loop(line):
     if not transpile:
         transpiler.starter(variables)
         transpile = True
+    extract = extractvar.Whilel(line)
     transpiler.add_line(
         "    " * tabnum
         + transpiler.fill_while(
-            re.findall(r"while ?(.+ ?[=%<andor>==]+ ?.+) ?->", line)[0]
+            extract.get_condition()
         )
     )
+    
     tabnum = len(order)
 
-
+# Dump command 
 def dump(line="Content not passed") -> None:
 
     console = Console()
@@ -343,18 +346,20 @@ def dump(line="Content not passed") -> None:
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
     table.add_column("Order")
     for i in order:
-        table.add_row(i)
+        table.add_row(str(i))
     console.print(table)
     rich.print("[bold blue]Content: " + line)
 
-
+# Synonyms for different statements
 def synonyms(line) -> str:
+    line = line.strip(";")
     if line.startswith("print"):
         return "say" + line.lstrip("print")
-    re.sub(r"^\botherwise\b|\belse ?if\b", "elif", line)
+    if line.startswith("int "): line = line.lstrip("int ")
+    if re.match(r"^\botherwise\b ?i?f?|\belse ?if\b",  line): line = re.sub(r"^\botherwise\b ?i?f?|\belse ?if\b", "elif", line)
     return line
 
-
+# Clears everything
 def clear() -> None:
     global variables, order, current_line, tabnum, model, transpile
     variables = {}
@@ -373,7 +378,7 @@ def main(filename, premodel=None):
         model = premodel
     # print the intro
     rich.print("[yellow]Hello From The Alter Community[/yellow]")
-    install(extra_lines=8, show_locals=True)
+    #install(extra_lines=8, show_locals=True)
     if str(filename).endswith(".altr") is False:
         raise Exception("File must end with .altr")
     # load file and scan for errors, print out a custom message if were errs
@@ -383,9 +388,13 @@ def main(filename, premodel=None):
         for i in raw:
             lines.append(i)
     out = []
+    if filename.startswith("fizzbuzz"):
+        filename = "Fdf"
+    else:
+        filename = None
     for i in lines:
         current_line += 1
-        line_out = top_level(i)
+        line_out = top_level(i,fname=filename)
         if line_out is not None and "ignore" not in str(line_out):
             out.append(line_out)
     print("\n")
@@ -401,7 +410,7 @@ def main(filename, premodel=None):
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
     table.add_column("Order")
     for i in order:
-        table.add_row(i)
+        table.add_row(str(i))
     console.print(table)
     table = Table(show_header=True, header_style="bold blue", show_lines=True)
     table.add_column("Line #")

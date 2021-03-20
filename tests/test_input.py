@@ -8,3 +8,4 @@ from interpreter import interpreter
 def test_input_string(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: "Alter")
     assert interpreter.main("tests/altr_files/input.altr") == ["Alter"]
+

@@ -1,0 +1,9 @@
+int counter = 99;
+
+while counter > 0 {
+    say counter + " cups of coffee on the wall, " + counter + " cups of coffee on the wall";
+    counter -= 1;
+    say "Take one down, pass it around, " + counter + " cups of coffee on the wall";
+}
+
+print "No more cups of coffee!"

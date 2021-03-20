@@ -1,0 +1,17 @@
+set num to 1
+
+while num < 100 ->
+    if num %3 == 0 and num % 5 == 0 {
+        say "FizzBuzz"
+    }
+    elif num % 3 == 0 ->
+        say "Fizz"
+    <-
+    elif num % 5 == 0 {
+        say "Buzz"
+    }
+    else:
+        say num
+    :
+    num += 1
+<-

@@ -38,7 +38,6 @@ def fill_print_plain(text) -> str:
 
 def fill_print_text_var(args: list) -> str:
     line = templates("print_text+var")
-    print(args)
     for i in args:
         if i[1] == 1:
             line = line + ' + "' + i[0] + '"'
@@ -183,7 +182,7 @@ def run() -> list:
     if err != "b''":
         rich.print("[bold red]ERROR: " + err)
     progout = out.lstrip("b'").rstrip("'")
-    os.remove(f"./{fname}.py")
+    #os.remove(f"./{fname}.py")
     toret = []
     vars = get_var()
     vars = make_varlist(vars)

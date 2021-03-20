@@ -5,16 +5,16 @@ from textblob import TextBlob
 
 def load():
     try:
-        cl = pickle.load(open("./models/variables/classifier.pickle", "rb"))
+        cl = pickle.load(open(r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle", "rb"))
     except:
         try:
             cl = pickle.load(
-                open("./interpreter/models/variables/classifier.pickle", "rb")
+                open(r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle", "rb")
             )
         except:
             cl = pickle.load(
                 open(
-                    r"C:\Users\atharv\Documents\Alter\AlterLang-Source\interpreter\models\variables\classifier.pickle",
+                    r"C:\Users\atharv\Documents\Alter\Alter-ML\classifier.pickle",
                     "rb",
                 )
             )
@@ -33,15 +33,15 @@ def classify(text: str) -> bool:
 if __name__ == "__main__":
     cl = load()
     t1 = time.time()
-    blob = TextBlob("while x is 1:", classifier=cl)
+    blob = TextBlob("while x is 1 {", classifier=cl)
     print(blob.classify())
     print("Classifying took: ", time.time() - t1)
     t1 = time.time()
-    blob = TextBlob("x=4", classifier=cl)
+    blob = TextBlob("set x to 55", classifier=cl)
     print(blob.classify())
     print("Classifying took: ", time.time() - t1)
     t1 = time.time()
-    blob = TextBlob("name = 'hello'", classifier=cl)
+    blob = TextBlob("name equals 'hello'", classifier=cl)
     print(blob.classify())
     print("Classifying took: ", time.time() - t1)
     t1 = time.time()

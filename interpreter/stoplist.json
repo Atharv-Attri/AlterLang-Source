@@ -5,6 +5,34 @@
         "and","its","it's","'s",
         "set","value","to","=",
         "of","the","\"",",","equal"
+    ],
+    "while":[
+        "while",
+        "when",
+        "As long as",
+        "Repeat",
+        "Whilst"
+    ],
+    "if":[
+      "if",
+      "in the event",
+      "in the event of",
+      "assuming",
+      "given",
+      "provided",
+      "In the case that",
+      "Supposing that",
+      "Granted that",
+      "Whenever",
+      "otherwise"
+    ],
+    "varmath":[
+        "Add", "Increase", "Make", "Raise",
+        "to", "by", "greater by",
+        "Subtract", "Deduct", "Decrease", "Diminish",
+        "from",
+        "Divide", "Split",
+        "Multiply"
     ]
 
 }
